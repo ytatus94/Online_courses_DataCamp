@@ -16,9 +16,9 @@
     * NumPy array 可以看成是 Python list 在 NumPy 裡面等價的東西，但用來建立 NumPy array 的 list 的元素必須要是相同型態。
 如果用來建立 NumPy array 的 list 的元素型態不同，NumPy 會把所有元素轉成 string 型態
     * 對 NumPy array 做加減乘除等操作就是對 NumPy array 中的每個元素操作，拿兩個 NumPy array 做運算，會用相對應的元素來計算
-    * NumPy array 切片的方式和 list ㄧ樣。
-    * `np_array[ np_array 條件判斷 ]` 會選出符合條件判斷的元素。
-    * `np_array.shape` 看陣列的維度，shape 是屬性不是方法所以沒有括號。
+    * NumPy array 切片的方式和 list ㄧ樣
+    * `np_array[ np_array 條件判斷 ]` 會選出符合條件判斷的元素
+    * `np_array.shape` 看陣列的維度，shape 是屬性不是方法所以沒有括號
     * `np_array_2D[row][column]` 或 `np_array_2D[row, column]` 可存取二維 NumPy array 中的元素
   * NumPy 統計:
     * `np.mean(np_array)` 平均值
@@ -31,32 +31,33 @@
     * `np.sqrt()` 算平方根
     * `np.round(數值, 四捨五入到第幾位)` 四捨五入
       * 例如：
+      
         ```python
         np.round(np.random.normal(mean, std, # of samples), 2)
         ```
         把第一個參數取到小數點第二位，
         第一個參數 `np.random.normal(mean, std, # of samples)` 是產生隨機的高斯分佈
-    * `np.column_stack( (list1, list2) )` 將兩個 list 寫成 column 向量後從左往右排在一起。
+    * `np.column_stack( (list1, list2) )` 將兩個 list 寫成 column 向量後從左往右排在一起
     * Numpy 有 `vstack()`, `column_stack()`, `hstack()` 方法
-    * 例如：
-      ```python
-      np.vstack(([1,2,3],[4,5,6]))
-      = array([[1, 2, 3],
-               [4, 5, 6]])
-      ```
-      ```python
-      np.column_stack(([1,2,3],[4,5,6]))
-      = array([[1, 4],
-               [2, 5],
-               [3, 6]])
-      ```
-      ```python
-      np.hstack(([1,2,3],[4,5,6]))
-      = array([1, 2, 3, 4, 5, 6])
-
-      ```                                                             
+      * 例如：
+      
+        ```python
+        np.vstack(([1,2,3],[4,5,6]))
+        = array([[1, 2, 3],
+                 [4, 5, 6]])
+        ```
+        ```python
+        np.column_stack(([1,2,3],[4,5,6]))
+        = array([[1, 4],
+                 [2, 5],
+                 [3, 6]])
+        ```
+        ```python
+        np.hstack(([1,2,3],[4,5,6]))
+        = array([1, 2, 3, 4, 5, 6])
+        ```                                                             
 * `help(func)` 和 `?func` 都可以用來查詢函數的資訊
   * 例如：`help(max)` 或是 `?max` 可以查 `max()` 函數的資訊
-* from math import pi
-* from math import radians
+* `from math import pi`
+* `from math import radians`
 * `type(物件)` 查物件的型態
