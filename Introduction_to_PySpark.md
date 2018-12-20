@@ -119,7 +119,7 @@ piped_data = spark_DF_pipe.fit(spark_DF).transform(spark_DF)
 * 都做完後才能做 train test split
 
 ```python
-training, test = piped_data.randomSplit([train 要多少比例, test 要多少比例]) 比例是介於 0 ~ 1
+training, test = piped_data.randomSplit([train 要多少比例, test 要多少比例]) # 比例是介於 0 ~ 1
 ```
 
 * Logistic regression 是 classification 的一種，是用來預測屬於某個事件的機率，所以我們要提供一個 cutoff 或是叫做 threshold 來判斷預測的結果是否屬於某個事件
