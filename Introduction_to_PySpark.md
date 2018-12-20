@@ -67,8 +67,8 @@ flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位�
 ```
 
   * `spark_DF.select()` 和 `spark_DF.withColumn()` 功能很像
-    * `spark_DF.select()` 傳回的是選擇欄位
-    * `spark_DF.withColumn()` 傳回的是全部的欄位
+    * `spark_DF.select()` 傳回的是**選擇欄位**
+    * `spark_DF.withColumn()` 傳回的是**全部的欄位**
 
 * `spark_column_obj.alias()`
   * 相當於 SQL 裡的 `AS`
