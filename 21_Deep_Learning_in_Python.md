@@ -1,4 +1,4 @@
-21. Deep Learning in Python
+# 21. Deep Learning in Python
 
 - Forward propagation: 每個節點上算 input 和 weight 的內積
 input data 是一個 np.array()，weight 是一個字典包含每個節點上的權重
