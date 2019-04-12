@@ -3,17 +3,33 @@
 * 在 IPython 中用 `!` 開頭的話可以使用 shell command
 
 ## 開讀檔:
-* 開檔 `file = open('filename.txt', mode='r')` 檔案讀完要記得 `file.close()` 關掉，只讀取檔案時用 `mode='r'` 寫入檔案時使用 `mode='w'`
-* `with open('filename.txt', 'r') as file:` 用 `with` 來開讀檔的話，不必用 `file.close()` 關掉
-* `file.read()` 一次讀全部，`file.readline()` 一行一行讀，`file.readlines()` 一次讀全部，傳回一個 list，每一行是 list 的一個元素
+* 開檔 `file = open('filename.txt', mode='r')` 
+  * 只讀取檔案時用 `mode='r'` 寫入檔案時使用 `mode='w'`
+  * 檔案讀完要記得 `file.close()` 關掉，
+* `with open('filename.txt', 'r') as file:` 
+  * 用 `with` 來開讀檔的話，不必用 `file.close()` 關掉
+* `file.read()` 一次讀全部
+* `file.readline()` 一行一行讀
+* `file.readlines()` 一次讀全部，傳回一個 list，每一行是 list 的一個元素
 * `file.close()` 關閉檔案。
 * `file.closed` 確認檔案是否關閉， `closed` 是屬性，不是方法，所以沒有括號。
 
 ## Zen of Python
 * `import this` 可以顯示 Zen of Python
 
-* 用 Numpy 來讀檔: 用 `loadtxt()` 或 `genfromtxt()` 或 `recfromcsv()`
-* 例如: `data = np.loadtxt(file, delimiter=',', skiprows=1, usecols=[0, 2], dtype=str)` 把 file 讀入 Numpy array，`delimiter=','` 指定用逗號當分隔符號，不讀 `skiprows` 指明的列數 (不是列 index)，只讀入 `usecols` 選定的欄位，`dtype=str` 指明讀入的是 `str`，因為**預設是讀成數字**，如果有字串的話，讀取就會錯誤，因此才要指明讀入的是 `str`，讀入後 data 的型態是 `numpy.ndarray`
+## 用 Numpy 來讀檔:
+* 用 `loadtxt()` 或 `genfromtxt()` 或 `recfromcsv()`
+* 例如:
+```python
+data = np.loadtxt(file, delimiter=',', skiprows=1, usecols=[0, 2], dtype=str)
+``` 
+把 file 讀入 Numpy array
+`delimiter=','` 指定用逗號當分隔符號
+不讀 `skiprows` 指明的列數 (不是列 index)
+只讀入 `usecols` 選定的欄位
+`dtype=str` 指明讀入的是 `str`，因為**預設是讀成數字**，如果有字串的話，讀取就會錯誤，因此才要指明讀入的是 `str`
+讀入後 data 的型態是 `numpy.ndarray`
+
 * 例如: `data = np.loadtxt("file.txt", delimiter='\t', dtype=float, skiprows=1)` 用 `\t` 當分隔符號，指明讀入的是 `float` 型態，不讀入檔案中的第一列
 * 例如: `data = np.genfromtxt('file.csv', delimiter=',', names=True, dtype=None)` 用 `names=True` 表示有 header，`dtype=None` 自動決定每一欄的型態
 * 例如: `np.recfromcsv(file)` 相當於 `np.genfromtxt()` 用 `delimiter=',', names=True, dtype=None` 參數
