@@ -3,12 +3,14 @@
 * 用 `list(列表的名字)` 或是 `list_name[:]` 來拷貝列表的話，是拷貝列表中的值，而非記憶體位置
 
 ## String
+
 ```python
 str.upper() # 將 str 改成大寫
 str.count("a") # 計算 a 在 str 中出現的次數
 ```
 
 ## 常用的 list 方法：
+
 ```python
 list.index(a) # 找出列表中 a 的 index
 list.count(a) # 計算列表中 a 出現的次數
@@ -31,6 +33,7 @@ list.reverse() # 把列表元素反向排列
 * `np_array_2D[row][column]` 或 `np_array_2D[row, column]` 可存取二維 NumPy array 中的元素
 
 ### NumPy 統計:
+
 ```python
 np.mean(np_array) # 平均值
 
