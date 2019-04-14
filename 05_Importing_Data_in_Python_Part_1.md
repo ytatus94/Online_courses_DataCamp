@@ -77,17 +77,28 @@ plt.scatter(data_float[:, 0], data_float[:, 1])
 ```python
 df = pd.read_csv('file.csv') # 讀成 DataFrame
 df = pd.read_csv('file.csv', nrows=5, header=None) # 只讀前五列，沒有 header
-df = pd.read_csv(file, sep='\t', comment='#', na_values=['Nothing']) # 用 `sep` 指明 delimiter 是 `\t`，`comment` 指明註解行的開頭是什麼字元，不會讀入註解行，`na_values` 用一個列表來指定什麼東西要讀入成 NA/NaN
+df = pd.read_csv(file, sep='\t', comment='#', na_values=['Nothing'])
+```
+用 `sep` 指明 delimiter 是 `\t`
+
+`comment` 指明註解行的開頭是什麼字元，不會讀入註解行
+
+`na_values` 用一個列表來指定什麼東西要讀入成 `NA`/`NaN`
+
 * 用 `\t` 當分隔符的有時候是寫成 tsv 檔案
+
 ```python
 df.head() # 顯示前五列
 df.tail() # 顯示最後五列
 ```
 * `df_array = df.values` 把讀入的 DataFrame 轉成是 Numpy array
 * `pd.DataFrame.hist(data[['Age']])` 等同於 `data[['Age']].hist()` 注意要用雙括號變成 Pandas DataFrame
-* import os
+
+```python
+import os
 wd = os.getcwd() get current working directory
-- os.listdir(wd)
+os.listdir(wd)
+```
 
 ## 用 Pickle 來讀檔
 import pickle 用來存取 python 的  bytestream 格式的檔案
