@@ -20,7 +20,10 @@ list.reverse() # 把列表元素反向排列
 ``` 
 
 ## NumPy
-* `import numpy as np`
+
+```python
+import numpy as np
+```
 
 ### NumPy array:
 * `np.array([list])` 建立 array 型態是 `numpy.ndarray`，ndarray 表示 N-dimension array
