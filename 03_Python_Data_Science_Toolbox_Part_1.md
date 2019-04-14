@@ -16,7 +16,7 @@
 * map
 ```python
 map(lambda func, list) # 將 list 中的每個元素做 lambda function 的計算，傳回一個 map 物件。
-list(map(lambda func, list)) # 
+list(map(lambda func, list)) # 把 map 物件轉成 list
 ```
 
 * filter
