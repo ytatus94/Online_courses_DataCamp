@@ -94,16 +94,22 @@ df.tail() # 顯示最後五列
 * `df_array = df.values` 把讀入的 DataFrame 轉成是 Numpy array
 * `pd.DataFrame.hist(data[['Age']])` 等同於 `data[['Age']].hist()` 注意要用雙括號變成 Pandas DataFrame
 
+---
+
 ```python
 import os
-wd = os.getcwd() get current working directory
+wd = os.getcwd() # get current working directory
 os.listdir(wd)
 ```
 
 ## 用 Pickle 來讀檔
-import pickle 用來存取 python 的  bytestream 格式的檔案
-- with open('data.pkl', 'rb') as file: 第二個參數 rb 表示 read only, binary
--     d = pickle.load(file) 會把 d 讀成一個 dict
+* 用來存取 python 的  bytestream 格式的檔案
+
+```python
+import pickle 
+with open('data.pkl', 'rb') as file: # 第二個參數 rb 表示 read only, binary
+    d = pickle.load(file) # 會把 d 讀成一個 dict
+```
 
 ## 用 Pandas 讀 Excel 檔
 xl = pd.ExcelFile(file) 讀入 Excel 檔，xl 的格式是 pandas.io.excel.ExcelFile
