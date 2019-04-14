@@ -102,10 +102,17 @@ df[['欄位名1', '欄位名2']] # 存取兩個欄位，傳回 Pandas DataFrame
 * 各種迴圈的方式：
 
   ```python
-  for key, value in dict.items(): # 迴圈字典
-  for x in np_array_1D: # 迴圈 np_array
-  for x in np.nditer(np_array_2D): #  迴圈多維 Numpy array 要用 np.nditer()
-  for lab, row in pd_dataframe.iterrows(): # 迴圈 data_frame 要用 .iterrows()，其中 for loop 傳回的 row data 是 Pandas Series
+  # 迴圈字典
+  for key, value in dict.items():
+  
+  # 迴圈 np_array
+  for x in np_array_1D:
+  
+  # 迴圈多維 Numpy array 要用 np.nditer()
+  for x in np.nditer(np_array_2D):
+  
+  # 迴圈 data_frame 要用 .iterrows()，其中 for loop 傳回的 row data 是 Pandas Series
+  for lab, row in pd_dataframe.iterrows():
   ```
   
 ---
