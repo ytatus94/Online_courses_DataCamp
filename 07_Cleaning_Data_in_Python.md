@@ -46,7 +46,8 @@ df.欄位.boxplot(column='哪一欄當y軸，通常是某種計數', by='依照�
 ```
 * Examples:
 ```python
-# 畫 Existing Zoning Sqftkind 欄位，用 kind 指明畫 hist，rot=70 是說 x labels 轉 70 度， logx=True, logy=True 使用 log x 和 log y座標。
+# 畫 Existing Zoning Sqftkind 欄位，用 kind 指明畫 hist，rot=70 是說 x labels 轉 70 度
+# logx=True, logy=True 使用 log x 和 log y座標。
 df['Existing Zoning Sqft'].plot(kind='hist', rot=70, logx=True, logy=True) 
 
 # 照 by 指定的欄位裡面獨立的元素來當 x 軸，畫 column 指定欄位的 box plot，rot=90 是說 x labels 轉 90 度
@@ -101,10 +102,17 @@ weather_tidy = weather.pivot(index='date', columns='element', values='value')
 
 weather2_tidy = weather.pivot_table(values='value', index='date', columns='element', aggfunc=np.mean)
 
-airquality_pivot = pd.pivot_table(data=airquality_melt, index=['Month', 'Day'], columns='measurement', values='reading')
+airquality_pivot = pd.pivot_table(data=airquality_melt,
+                                  index=['Month', 'Day'],
+                                  columns='measurement',
+                                  values='reading')
 
 # 指定當欄位有重複時用 np.mean
-airquality_pivot = pd.pivot_table(data=airquality_dup, index=['Month', 'Day'], columns='measurement', values='reading', aggfunc=np.mean)
+airquality_pivot = pd.pivot_table(data=airquality_dup,
+                                  index=['Month', 'Day'],
+                                  columns='measurement',
+                                  values='reading',
+                                  aggfunc=np.mean)
 ```
 
 * 有時候一個欄位包含了兩種以上的資訊，可以利用 `melt()` 和 `pivot()` 把資訊分開來
