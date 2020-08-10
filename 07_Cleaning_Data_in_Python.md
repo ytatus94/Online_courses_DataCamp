@@ -22,8 +22,8 @@ df.describe()
 * `df['欄位名']` 也可以用 `df.欄位名` 但是後者只適用於欄位名沒有空格時。
   * 如果欄位名有空格的話只能用 `df['欄位名']`
 
-* 計算 col 的 frequency count
-  * 就是統計 col 的每一個獨立的數值各出現幾次，並將結果以遞減排列
+* 計算欄位的 frequency count
+  * 就是統計欄位的每一個獨立的數值各出現幾次，並將結果以遞減排列
   * 預設 missing value 和 NaN 不會被列入計算
     * 若加入參數 dropna=False (預設是 dropna=True) 則會把 missing value 和 NaN 列入計算。
 ```python
