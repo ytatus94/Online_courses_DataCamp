@@ -1,11 +1,44 @@
-8. pandas Foundations
+# 8. pandas Foundations
 
-- pandas DataFrame 是一個 2D array 每一個欄位是 pandas Series 是一個 1D array
-- df.shape 顯示 df 的維度, df.index, df.columns (型態是 index) 可以用來顯示也可以用來指定 row index 和 column 的名字
-- 命名欄位或者是列用 df.columns=[欄位名字的列表], df.index=[row index], df.index.name='列的 index 那一欄的名字'
-- df.head(), df.tail(), df.info() 可以顯示 df 相關的資訊
-- df.column_name.values 或 df['column_name'].values 型態是numpy.ndarray，df.values 和 pd_series.values 也是 numpy.ndarray 型態
-- NaN ('Not-a-Number')
+## Pandas Dataframe 的基本操作
+* pandas DataFrame 是一個 2D array 
+  * 每一個欄位是 pandas Series，是一個 1D array
+* 顯示 df 相關的資訊
+```python
+# 顯示頭 n 列，預設 n=5
+df.head(n)
+
+# 顯示末 n 列，
+df.tail(n)
+
+# 顯示 df 的資訊
+df.info()
+
+# 顯示 df 的維度
+df.shape
+
+# 顯示 row index
+df.index
+
+# 顯示 columns 的名字 (型態是 index)
+df.columns
+```
+* 為欄位或是列命名
+```python
+# 命名列: 指定 row index
+df.index=[row index 的列表]
+
+# 命名欄位: 指定 column 的名字
+df.columns=[欄位名字的列表]
+
+# 命名欄位: 指定 row index 所在的那一個欄位的名字
+df.index.name='列的 index 那一欄的名字'
+```
+* `df.column_name.values` 或 `df['column_name'].values` 型態是 numpy.ndarray
+* `df.values` 和 `pd_series.values` 也是 numpy.ndarray 型態
+* NaN 表示 Not-a-Number
+
+
 - np_vals_log10 = np.log10(np_vals)
 - 也可以把 df 當參數直接傳給 numpy methods 例如：df_log10 = np.log10(df) 結果是 DataFrame
 - eval(x)
