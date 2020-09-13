@@ -1,31 +1,74 @@
-13. Introduction to Data Visualization with Python
+# 13. Introduction to Data Visualization with Python
 
-- import matplotlib.pyplot as plt
-plt.plot([x values], [y values], color='顏色', label='圖標') 產生在記憶體裡。
-- x, y 的值可以是 list, np_array, pandas series。
-plt.show() 真的畫出來。
+## 用 matplotlib 畫圖
 
-- 分割子圖：
-方法一：plt.axes([xlo, ylo, width, height])
-- xlo, ylo, width, height 介於 0 ~ 1 是依照 Canvas 的比例分割成子圖
-左下角的座標由 xlo, ylo 決定，這兩個是用 canvas 的座標。
-plt.axes() 可以用來畫子母圖。
-- 方法二：plt.subplot(m, n, k)
-- m 列 n 行個子圖，目前啟用第 k 個圖，k 是從 1 開始算起。
-- plt.xlabel('x title')，plt.ylabel('y title')，plt.title('canvas title') 標註 x, y 軸和圖的標題
-- plt.tight_layout() improve the spacing between subplots
-- plt.xlim([xmin, xmax]) 和 plt.ylim([ymin, ymax]) 可個別設定 x 和 y 軸上下限
-- plt.axis([xmin, xmax, ymin, ymax]) 則是同時設定，除了用 list 當參數外，也可以用 tuple 當參數。
+* 基本使用方式
+  ```python
+  import matplotlib.pyplot as plt
+  plt.plot([x values], [y values], color='顏色', label='圖標') # 產生在記憶體裡
+  plt.show() # 真的畫出來
+  ```
+  * `x`, `y` 的值可以是 list, np_array, pandas series
+
+* 分割子圖
+  * 方法一
+    * 用 `plt.axes([xlo, ylo, width, height])`
+    * `xlo`, `ylo`, `width`, `height` 介於 0 ~ 1 是依照 Canvas 的比例分割成子圖
+    * 左下角的座標由 `xlo`, `ylo` 決定，這兩個是用 canvas 的座標
+    * `plt.axes()` 可以用來畫子母圖
+  * 方法二
+    * `plt.subplot(m, n, k)`
+       * `m` 列 `n` 行個子圖，目前啟用第 `k` 個圖，`k` 是從 1 開始算起。
+
+* 設定圖片的一些參數
+  ```python
+  # 使用某個圖片 style
+  plt.style.use('某種 style')
+  
+  # 設定 x, y 軸的標題和整張圖的標題
+  plt.xlabel('x title')
+  plt.ylabel('y title')
+  plt.title('canvas title')
+  
+  # 自動調整 subplots 之間的間距
+  plt.tight_layout()
+  
+  # 設定 x, y 軸的上下限
+  plt.xlim([xmin, xmax])
+  plt.ylim([ymin, ymax])
+  plt.axis([xmin, xmax, ymin, ymax]) # 同時設定 x 和 y 軸上下限，除了用 list 當參數外，也可以用 tuple 當參數
+  
+  # 圖片的 legend
+  plt.legend(loc='圖標的位置')
+  # 位置的選擇有'upper left', 'upper center', 'upper right',
+  #           'center left', 'center', 'center right',
+  #           'lower left', 'lower center', 'low right',
+  #           'best', right'
+  
+  # 在圖片上加上文字說明和箭頭
+  plt.annotate(s='要顯示的字',
+               xytext=(文字的 x, 文字的 y),
+               xy=(箭頭位置的 x, 箭頭位置的 y),
+               arrowprops=dict(facecolor='black'))
+  # arrowprops 表示 arrow properties 用字典來指定箭頭的特性
+  
+  # 把圖片存檔
+  plt.savefig('輸出檔案')
+  # 支援 pdf, png, jpg 格式
+  ```
+
+* 列出所有可用的圖片 style: `print(plt.style.available)`
+
 - plt.axis() 也可以用參數 'off', 'equal', 'square', 'tight'
 - axis('off'): turn off axis lines, labels
 axis('equal'): equal scaling on x, y axes
 axis('square'): forces square plot
 axis('tight'): sets xlim(), ylim() to show all data
-- plt.legend(loc='圖標的位置') 有 'upper left', 'upper center', 'upper right', 'center left', 'center', 'center right', 'lower left', 'lower center', 'low right', 和 'best', right'
-- plt.annotate(s='要顯示的字', xy=(箭頭的 x, 箭頭的 y), xytext=(字的 x, 字的 y), arrowprops=dict(facecolor='black')) arrowprops 表示 arrow properties 用字典來指定特性
-- plt.style.use('ggplot') 使用 ggplot 的 style
-- 用 print(plt.style.available) 列出所有可用的 style
-- plt.savefig('輸出檔案.png') 支援 pdf, png, jpg 格式
+- 
+- 
+
+-
+- 
 - cs_max = computer_science.max()  和 yr_max = year[computer_science.argmax()] 中的 computer_science 是 numpy.ndarray，可以呼叫 numpy.ndarray 方法 max() 傳回最大值，argmax() 傳回最大值對應的 index
 - np.linspace(起點，終點，幾個點) 在起點到終點之間等間隔的產生幾個點，包含終點，產生的是 numpy.ndarray
 - X, Y = np.meshgrid(u, v) u, v 都是一維 numpy.ndarray，X, Y 都是二維 numpy.ndarray，若 u 的元素有 n 個 v 的元素有 m 個，則 X, Y 的元素有 m x n 個，實際上 X 是由 m 列個 u 組成，Y 是由 v 轉置後由 n 行組成
@@ -54,6 +97,11 @@ plt.hist2d(x, y, bins=(20, 30), range=((x下限, x上限), (y下限, y上限))) 
 
 - 低對比度的圖可以藉由 rescale intensity 來改變
 例如：rescaled_image = 256*(image - image.min()) / (image.max() - image.min())
+
+## 用 seaborn 畫圖
+
+
+
 - import seaborn as sns seaborn 是建立在 matplotlib 之上的，所以兩個都要 import
 - sns.lmplot(x='欄位名', y='欄位名', data=df, hue='欄位名', palette='Set1') 畫 linear regression，hue 指定要依照哪個欄位分類，此處的欄位的值是 categorical 的，相同的值就用同樣的顏色，而 palette 指定分類的顏色，用 hue 是畫在同一張圖上，若是用 row='欄位名' 或 col='欄位名' 則依照欄位的 categorical 的值，分成 subplot 畫出來，一個 category 畫一個圖，這邊的 row 和 col 是說在 subplot 上要畫成 row 或 column
 - sns.residplot(x='欄位名', y='欄位名', data=df, color='green') 畫 residual 圖，residual 就是每個點和 linear regression 的線的距離
