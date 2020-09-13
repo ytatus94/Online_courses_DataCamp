@@ -11,14 +11,12 @@
   * `x`, `y` 的值可以是 list, np_array, pandas series
 
 * 分割子圖
-  * 方法一
-    * 用 `plt.axes([xlo, ylo, width, height])`
+  * 方法一: `plt.axes([xlo, ylo, width, height])`
     * `xlo`, `ylo`, `width`, `height` 介於 0 ~ 1 是依照 Canvas 的比例分割成子圖
     * 左下角的座標由 `xlo`, `ylo` 決定，這兩個是用 canvas 的座標
     * `plt.axes()` 可以用來畫子母圖
-  * 方法二
-    * `plt.subplot(m, n, k)`
-       * `m` 列 `n` 行個子圖，目前啟用第 `k` 個圖，`k` 是從 1 開始算起。
+  * 方法二: `plt.subplot(m, n, k)`
+    * `m` 列 `n` 行個子圖，目前啟用第 `k` 個圖，`k` 是從 1 開始算起
 
 * 設定圖片的一些參數
   ```python
@@ -30,8 +28,16 @@
   plt.ylabel('y title')
   plt.title('canvas title')
   
-  # 自動調整 subplots 之間的間距
-  plt.tight_layout()
+  # 把 xticks 的文字轉角度
+  plt.xticks(rotation=角度) 
+  
+  # 畫格線
+  plt.grid()
+  plt.grid('off') # 把格線關掉
+  
+  # 使用雙 y 軸
+  plt.twinx()
+  # 在此行程式碼之前的圖看左邊的 y 軸，在此行程式碼之後的圖看右邊的 y 軸
   
   # 設定 x, y 軸的上下限
   plt.xlim([xmin, xmax])
@@ -51,6 +57,9 @@
                xy=(箭頭位置的 x, 箭頭位置的 y),
                arrowprops=dict(facecolor='black'))
   # arrowprops 表示 arrow properties 用字典來指定箭頭的特性
+  
+  # 自動調整 subplots 之間的間距
+  plt.tight_layout()
   
   # 把圖片存檔
   plt.savefig('輸出檔案')
@@ -98,33 +107,98 @@ plt.hist2d(x, y, bins=(20, 30), range=((x下限, x上限), (y下限, y上限))) 
 - 低對比度的圖可以藉由 rescale intensity 來改變
 例如：rescaled_image = 256*(image - image.min()) / (image.max() - image.min())
 
+
+
+
 ## 用 seaborn 畫圖
 
+* seaborn 是建立在 matplotlib 之上的，所以兩個都要 import
+  ```python
+  import seaborn as sns
+  ```
+
+* 畫 linear regression
+  ```python
+  sns.lmplot(x='欄位名', y='欄位名', data=df, hue='欄位名', palette='Set1')
+  ```
+  * `hue` 指定要依照哪個欄位分類，此處的欄位的值是 categorical 的，相同的值就用同樣的顏色
+  * `palette` 指定分類的顏色
+  * 用 `hue` 是畫在同一張圖上，若是用 `row='欄位名'` 或 `col='欄位名'` 則依照欄位的 categorical 的值，分成 subplot 畫出來，一個 category 畫一個圖，這邊的 `row` 和 `col` 是說在 subplot 上要畫成 row 或 column
+
+* 畫高階 regression
+  ```python
+  sns.regplot(x='欄位名', y='欄位名', data=df, color='顏色', scatter=None, label='order 2', order=2)
+  ```
+  * `lmplot()` 只是 `regplot(order=1)` 的特例
+  * 階數由 `order` 指定
+  * `scatter=None` 表示不要畫數據點，只畫 regression 的線
+* 畫 residual 圖
+  ```python
+  sns.residplot(x='欄位名', y='欄位名', data=df, color='顏色')
+  ```
+  * residual 就是每個點和 linear regression 的線的距離
+
+* 畫 uni variable 的圖
+  ```python
+  sns.stripplot(x='欄位名', y='欄位名', data=df, jitter=True, size=3)
+  ```
+  * `stripplot()` 是把所有數據點畫在一條線上，如果數據值相同，點就疊再一起了
+  * 用 `jitter=True` 來讓數據點散開來
+  * 用 `size` 指定數據點的大小
+  
+  ```python
+  sns.swarmplot(x='欄位名', y='欄位名', data=df, hue='欄位名', orient='h')
+  ```
+  * `swarmplot()` 是畫像是樹枝展開一樣的圖，相同的數據點就往左右展開而不會疊再一起
+  * `orient='h'` 則是畫成水平的圖
+  
+  ```python
+  sns.violinplot(x='欄位名', y='欄位名', data=df, inner=None, color='lightgray')
+  ```
+  * `violinplot()` 密度越高的地方越胖
+  * `inner=None` 表示不要有 inner annotation
+  * 若是先畫 violin plot 再畫 strip plot 那 `stripplot()` 的點會疊在 `violinplot()` 圖上面
+
+* 畫 bivariate 的圖
+  ```python
+  sns.jointplot(x='hp', y='mpg', data=auto, kind='hex')
+  ```
+  * `joinplot()` 是中間畫散射圖，上面跟右側放 histogram
+  * 可以藉由指定 `kind` 來畫不同的圖
+    ```python
+    kind='scatter' uses a scatter plot of the data points
+    kind='reg' uses a regression plot (default order 1)
+    kind='resid' uses a residual plot
+    kind='kde' uses a kernel density estimate of the joint distribution
+    kind='hex' uses a hexbin plot of the joint distribution
+    ```
+  * 會計算 Pearson coefficient 和 p-value 的值，並放在圖上
+  
+  ```python
+  sns.pairplot(df, hue='欄位名', kind='reg')
+  ```
+  * `pairplot()` 把 df 中所有數值欄位都拿來當 `x`, `y` 畫圖
+  * 用 `hue` 來區分不同類別的顏色
+  * 用 `kind` 來畫不同的圖
+  
+  ```python
+  sns.heatmap(cov_matrix)
+  ```
+  * `heatmap()` 畫 covariant matrix 所以參數是放 covariant matrix
 
 
-- import seaborn as sns seaborn 是建立在 matplotlib 之上的，所以兩個都要 import
-- sns.lmplot(x='欄位名', y='欄位名', data=df, hue='欄位名', palette='Set1') 畫 linear regression，hue 指定要依照哪個欄位分類，此處的欄位的值是 categorical 的，相同的值就用同樣的顏色，而 palette 指定分類的顏色，用 hue 是畫在同一張圖上，若是用 row='欄位名' 或 col='欄位名' 則依照欄位的 categorical 的值，分成 subplot 畫出來，一個 category 畫一個圖，這邊的 row 和 col 是說在 subplot 上要畫成 row 或 column
-- sns.residplot(x='欄位名', y='欄位名', data=df, color='green') 畫 residual 圖，residual 就是每個點和 linear regression 的線的距離
-- sns.regplot(x='欄位名', y='欄位名', data=df, color='green', scatter=None, label='order 2', order=2) regplot() 可以畫高階 regression 圖，階數由 order 指定，lmplot() 只是 regplot(order=1) 的特例，scatter=None 表示不要畫數據點，只畫 regression 的線
-- sns.stripplot(), sns.swarmplot(), sns.violinplot() 畫的是 uni variable 的圖
-- sns.joinplot(), sns.pairplot(), sns.heatmap() 畫的是 bivariate 的圖
-- sns.stripplot(x='欄位名', y='欄位名', data=df, jitter=True, size=3) strip plot 是把所有數據點畫在一條線上，如果數據值相同，點就疊再一起了，所以可以用 jitter=True 來讓點散開來，用 size 指定點的大小
-- sns.swarmplot(x='欄位名', y='欄位名', data=df, hue='欄位名', orient='h') swarm plot 是畫像是樹枝展開一樣的圖，相同的數據點就往左右展開而不會疊再一起，orient='h' 則是說畫成水平的圖
-- sns.violinplot(x='欄位名', y='欄位名', data=df, inner=None, color='lightgray') violin plot 密度越高的地方越胖，inner=None 表示不要有 inner annotation。
-- 若是先畫 violin plot 再畫 strip plot 那 strip plot 的點會疊在 violin plot 上面
-- sns.jointplot(x='hp', y='mpg', data=auto, kind='hex') join plot 是中間畫散射圖，上面跟右側放 histogram，可以藉由指定 kind 來畫不同的圖，會計算 Pearson coefficient 和 p-value 的值並放在圖上
-- kind='scatter' uses a scatter plot of the data points
-- kind='reg' uses a regression plot (default order 1)
-- kind='resid' uses a residual plot
-- kind='kde' uses a kernel density estimate of the joint distribution
-- kind='hex' uses a hexbin plot of the joint distribution
-- sns.pairplot(df, hue='欄位名', kind='reg') pair plot 把 df 中所有數值欄位都拿來當 x, y 畫圖，可以用 hue 來區分不同類別的顏色，用 kind 來畫不同的圖
-- sns.heatmap(cov_matrix) heat map 畫 covariant matrix 所以參數是放 covariant matrix
-- plt.xticks(rotation=60) 把 xticks 的文字轉 60 度
+
+
+
+- 
+-  
+
+-  
+-  
+- 
 - time series 可以切片做圖，time series moving window 也可以畫 mean, median, std 等等
 - pixels = image.flatten() 把讀入的 image 從 2D numpy array (m x n 個元素) 轉成 1D numpy array (m*n 個元素)
-- plt.grid('off')
-- plt.twinx() 雙 y 軸，在此行之前的圖看左邊的 y 軸，在此行之後的圖看右邊的 y 軸
+- 
 - plt.hist(normed=True, cumulative=True) 表示畫 cumulative distribution function，就是 hist 累積的面積，注意要歸一
 - histogram equalization 就是把圖片的像素強度重新計算的一個過程，使得圖片更銳利，對比更明顯，轉換後的圖片的 cdf 會是呈現一條斜線分佈
 cdf, bins, patches = plt.hist(pixels, bins=256, range=(0,256), normed=True, cumulative=True) 先取得 cdf
