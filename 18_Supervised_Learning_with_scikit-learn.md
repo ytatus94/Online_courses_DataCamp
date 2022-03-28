@@ -1,80 +1,174 @@
-18. Supervised Learning with scikit-learn
+# 18. Supervised Learning with scikit-learn
 
-- Supervised learning: Uses labeled data
-- Unsupervised learning: Uses unlabeled data
-- Features = predictor variables = independent variables
-Target variable = dependent variable = response variable
+## 名詞解釋
+#### Supervised & Unsupervised learning
+* Supervised learning: Uses labeled data
+  * kNN: k-Nearest Neighbors
+  * Linear regression, Laso & Ridge regresssion
+  * Logistic regression
+* Unsupervised learning: Uses unlabeled data
 
-- 拿到數據後首先要做的是 EDA 像是 df.head(), df.info(), df.describe(), df.columns
-- plt.style.use('ggplot') 指定圖的風格，這邊指定用 ggplot 的風格
+#### Features & Targets
+* Features = predictor variables = independent variables
+  * 用來預測的變數，通常是很多個變數欄位
+* Target variable = dependent variable = response variable
+  * 要預測的變數，通常只是一個變數欄位
 
-- 畫 sns.countplot():
-plt.figure() 要有這行才會畫在新的圖上，不然只會取代原先的圖
-- sns.countplot(x='畫哪個欄位', hue='用哪個欄位分類', data=df, palette='RdBu')
-plt.xticks([tick values], [tick labels])
-plt.show()
-- sklearn 的範例 dataset 的型態是 Bunch，和 dict 差不多，可以用 data.key 或是 data['key'] 來存取
-- pd.scatter_matrix(df, c=y, figsize=[8,8], s=150, marker='D') 畫某特徵vs其他特徵的圖
-- c 是顏色，表示依照 y 來分類成不同的顏色
-- s 是指定 marker size
-- X = df.drop('欄位A', axis=1).values 沿著列的方向把欄位 A 的值丟掉 (可以看成把整個表格的欄位 A 刪除)，再用 .values 變成 numpy array
-- df.corr() computes the pairwise correlation between columns
-- kNN: k-Nearest Neighbors
-由相鄰的數據點來判斷分類
+
+## DataFrame 的基本操作
+* 拿到數據後首先要做的是 EDA 像是 `df.head()`, `df.info()`, `df.describe()`, `df.columns`
+* `X = df.drop('欄位A', axis=1).values` 沿著 row (axis=1) 的方向把欄位 A 的值丟掉 (可以看成把整個表格的欄位 A 刪除)，再用 `.values` 把 dataframe 變成 numpy array
+* `df.corr()`: computes the pairwise correlation between columns
+
+## 畫圖相關
+* 畫 scatter matrix
+
+```python
+plt.style.use('ggplot') # 指定圖的風格，這邊指定用 ggplot 的風格
+plt.figure() # 要有這行才會畫在新的圖上，不然只會取代原先的圖
+pd.scatter_matrix(df, c=y, figsize=[8,8], s=150, marker='D') # 畫某特徵 vs 其他特徵的圖
+# c 是顏色，表示依照 y 來分類成不同的顏色
+# s 是指定 marker size
+plt.xticks([tick values], [tick labels]) # 改變 x 軸座標上的標示
+plt.show() # 把圖秀出來
+```
+
+* `plt.imshow(digits.images[1010], cmap=plt.cm.gray_r, interpolation='nearest')`
+* 畫 `sns.countplot()`:
+
+```python
+sns.countplot(x='畫哪個欄位', hue='用哪個欄位分類', data=df, palette='RdBu')
+```
+
+## Sklearn 的基本操作
+* sklearn 的範例 dataset 的型態是 `Bunch` (和 `dict` 差不多)，可以用 `data.key` 或是 `data['key']` 來存取
+* 不同的模型，使用 sklearn 的步驟是一樣的
+  * estimators: Train-Test-Split/Instantiate/Fit/Predict paradigm applies to all classifiers and regressors
+
+### kNN: k-Nearest Neighbors
+* kNN 是由相鄰的數據點來判斷分類
+
+```python
 from sklearn.neighbors import kNeighborsClassifier
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=42, stratify=y) 習慣上 feature array 是 X, target array是 y，test_size = 0.2 是把樣本切成 80% training 20% testing (預設是 test_size = 0.25)，random_state=42 指定亂數種子，stratify=y 訓練和測試樣本的標籤分佈與原始數據相同
-- knn = KNeighborsClassifier(n_neighbors = 6) 初始化，依照 6 個鄰居來判斷分類，鄰居數目越小 (more complex model) 越容易對某特別的事件較敏感，造成 overfitting，鄰居數目越大 (less complex model) 區分的邊界越平滑，但是數目太大時，會容易造成 underfitting
-- knn.fit(X_train, y_train) 對訓練樣本做，參數只能是 Numpy array
-- y_pred = knn.predict(X_test) 用測試樣本判斷 (可以用任何樣本來預測，例如用訓練樣本判斷，但是這樣沒有意義)
-- knn.score(X_test, y_test) 求 model performance，用測試樣本評估預測的正確性 accuracy
-- plt.imshow(digits.images[1010], cmap=plt.cm.gray_r, interpolation='nearest')
-- numpy 的 reshape(-1, 1) 的 -1 表示由原本的列x行自動計算 reshape 後的列數，然後第二個參數表示 reshape 後要有幾行
-- Error function = cost function = loss function
-linear regression 就是要把 loss function 最小化
-- Residual 就是點到 linear regression 的線的垂直距離
-- OLS (ordinary least squares): Minimize sum of squares of residuals
-- Linear regression
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state=42, stratify=y)
+# 習慣上 feature array 是 X, target array是 y
+# test_size = 0.2 是把樣本切成 80% training 和 20% testing (預設是 test_size = 0.25)
+# random_state=42 指定亂數種子
+# stratify=y 訓練和測試樣本的標籤分佈與原始數據相同
+
+knn = KNeighborsClassifier(n_neighbors = 6)
+# 初始化，依照 6 個鄰居來判斷分類
+# 鄰居數目越小 (more complex model) 越容易對某特別的事件較敏感，造成 overfitting
+# 鄰居數目越大 (less complex model) 區分的邊界越平滑，但是數目太大時，會容易造成 underfitting
+knn.fit(X_train, y_train) # 對訓練樣本做 fitting，參數只能是 Numpy array
+y_pred = knn.predict(X_test) # 用測試樣本判斷 (可以用任何樣本來預測，例如用訓練樣本判斷，但是這樣沒有意義)
+knn.score(X_test, y_test) # 求 model performance，用測試樣本評估預測的正確性 accuracy
+```
+
+### Linear regression
+* linear regression 就是要把 loss function 最小化
+  * Error function = cost function = loss function
+* Residual 就是點到 linear regression 的線的垂直距離
+* OLS (ordinary least squares): Minimize sum of squares of residuals
+* regression 的分數就叫做 $R^2$
+
+```python
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state=42) 把樣本切成訓練與測試用
-- reg = LinearRegression() 初始化
-- reg.fit(X_train, y_train) 訓練模型
-- y_pred = reg.predict(X_test) 預測結果
-- reg.score(X_test, y_test) 看 model performance，R^2 的分數，但是這和如何切樣本會有關
-- regression 的分數就叫做 R^2
+
+# 把樣本切成訓練與測試用
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.3, random_state=42)
+reg = LinearRegression() # 初始化
+reg.fit(X_train, y_train) # 訓練模型
+y_pred = reg.predict(X_test) # 預測結果
+reg.score(X_test, y_test) # 看 model performance，R^2 的分數，但是這和如何切樣本會有關
+
 from sklearn.metrics import mean_squared_error
-rmse = np.sqrt(mean_squared_error(y_test, y_pred)) 也可以求 RMSE: Root Mean Squared Error
-- 通常不會直接用 linear regression，會先 regularization 正規化之後才用
-- Cross-validation: 因為 R^2 和如何把樣本切成訓練與測試有關，所以就乾脆多切幾次，然後來算每次的 R^2 再求平均
-- from sklearn.linear_model import LinearRegression
+rmse = np.sqrt(mean_squared_error(y_test, y_pred)) # 也可以求 RMSE: Root Mean Squared Error
+```
+
+* Cross-validation: 因為 $R^2$ 和如何把樣本切成訓練與測試有關，所以就乾脆多切幾次，然後來算每次的 $R^2$ 再求平均
+
+```python
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score
+
 reg = LinearRegression()
-cv_scores = cross_val_score(reg, X, y, cv=5) 將樣本切成 5 份，一份當測試，剩下的當訓練。所以有五種可能的訓練與測試樣本組合，這叫做 5-fold CV，計算的結果是一個 list，切越多份計算的時間會越久
-- np.mean(cv_scores) 然後求平均值
-- Regularization: 當有很多 feature 時 (large coefficients)，linear regression 容易造成 overfitting，regularization 就是用來 penalize large coefficients
-- 有分成 Ridge regression 和 Lasso regression 兩種
-- Lasso regression
-loss = OLS loss + \alpha \sum_{i}^{n} |a_{i}| 這種叫做 L1 regularization，多加上去的那項叫做 penalty term
-- lasso 會把比較不重要的特徵的係數 a_{i} 縮成 0
+cv_scores = cross_val_score(reg, X, y, cv=5)
+# 將樣本切成 5 份，一份當測試，剩下的當訓練。
+# 所以有五種可能的訓練與測試樣本組合，這叫做 5-fold CV
+# 計算的結果是一個 list，切越多份計算的時間會越久
+np.mean(cv_scores) # 然後求平均值
+```
+
+* Regularization: 當有很多 feature 時 (large coefficients)，linear regression 容易造成 overfitting，regularization 就是用來 penalize large coefficients
+  * Regularization 有分成 Ridge regression 和 Lasso regression 兩種
+  * 通常不會直接用 linear regression，會先 regularization 正規化之後才用
+* Lasso regression (L1 regularization):
+  * loss = OLS loss + $\alpha \sum_{i}^{n} |a_{i}|$ 這種叫做 L1 regularization，多加上去的那項叫做 penalty term
+  * lasso 會把比較不重要的特徵的係數 $a_{i}$ 縮成 0
+* Ridge regression (L2 regularization)
+  * loss = OLS loss + $\alpha \sum_{i}^{n}a_{i}^{2}$ 這種叫做 L2 regularization
+  * 通常要做 regression 時，優先選擇用 Ridge regression
+* 在 sklearn 中用 Lasso 或是 Ridge 時，有一個參數 alpha 要調整，alpha 可以控制模型的複雜度
+  * 選擇 alpha 的值就叫做 hyperparameter tuning
+  * 當 alpha = 0 時就是原本的 OLS，可能會有 overfitting 的情形  
+  * 當 alpha 很大時可能會有 underfitting 的情形
+
+```python
+# Lasso regression
 from sklearn.linear_model import Lasso
 lasso = Lasso(alpha=0.4, normalize=True)
 lasso.fit(X_train, y_train)
 lasso_pred = lasso.predict(X_test)
 lasso.score(X_test, y_test)
-lasso_coef = lasso.coef_ 可以得知每個係數值，可以看到不重要的係數都被縮成 0
-- Ridge regression
-loss = OLS loss + \alpha \sum_{i}^{n}a_{i}^{2} 這種叫做 L2 regularization
-- 選擇 alpha 的值就叫做 hyperparameter tuning
-- alpha 可以控制模型的複雜度
-當 alpha = 0 時就是原本的 OLS，可能會有 overfitting 的情形
-當 alpha 很大時可能會有 underfitting 的情形
-通常要做 regression 時，優先選擇用 Ridge regression
+lasso_coef = lasso.coef_ # 可以得知每個係數值，可以看到不重要的係數都被縮成 0
+
+# Ridge regression
 from sklearn.linear_model import Ridge
-ridge = Ridge(alpha=0.1, normalize=True) 也可以事後用 ridge.alpha = 0.1 的方式來指定參數，normalize=True 使得所有的變數都是維持在相同的尺度
-- ridge.fit(X_train, y_train)
+ridge = Ridge(alpha=0.1, normalize=True)
+# 也可以事後用 ridge.alpha = 0.1 的方式來指定參數
+# normalize=True 使得所有的變數都是維持在相同的尺度
+ridge.fit(X_train, y_train)
 ridge_pred = ridge.predict(X_test)
 ridge.score(X_test, y_test)
+```
+
+### Logistic regression
+* 雖然 Logistic regression 名字有回歸 (regression)，但是 Logistic regression 是用在分類上而不是回歸上
+* 輸出機率 p>0.5 就 label=1，p<0.5 就 label=0，0.5 是 threshold 可以改
+* 有一個正規化參數 (regularization parameter) `C` 來控制正規化強度的倒數 (inverse of the regularization strength)
+  * `C` 就是一個 hyperparameter，`C` 越大會 overfit，`C` 越小會 underfit
+* 另一個 hyperparameter 是 penalty 值是 `['l1', 'l2']`
+
+```python 
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.4, random_state=42)
+logreg = LogisticRegression()
+logreg.fit(X_train, y_train)
+y_pred = logreg.predict(X_test)
+confusion_matrix(y_test, y_pred)
+classification_report(y_test, y_pred)
+```
+
+
+
+
+- numpy 的 reshape(-1, 1) 的 -1 表示由原本的列x行自動計算 reshape 後的列數，然後第二個參數表示 reshape 後要有幾行
+- 
+
+
+
+- 
+- 
+
+
+
+
 
 - 混淆矩陣
 假設兩類別 A B 想要判斷的類別是 A
@@ -94,22 +188,16 @@ confusion_matrix(y_test, y_pred)) 注意參數順序要先 test sample 的 label
 - classification_report(y_test, y_pred) 注意參數順序要先 test sample 的 label 再 predicted label
 - test sample 的 label 是真的結果，predicted label 是用 test sample 預測的結果，比較兩者
 分類報表中的 support 欄位是參與計算的樣本數目
-- Logistic regression
-雖然名字有回歸，但是 Logistic regression 是用在分類上而不是回歸上
-輸出機率 p>0.5 就 label=1，p<0.5 就 label=0，0.5 是 threshold 可以改
-- 有一個正規化參數 (regularization parameter) C 來控制正規化強度的倒數 (inverse of the regularization strength)
-- C 就是一個 hyperparameter，C 越大會 overfit，C 越小會 underfit
-- 另一個 hyperparameter 是 penalty 值是 ['l1', 'l2']
-- from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix, classification_report
-- X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.4, random_state=42)
-logreg = LogisticRegression()
-logreg.fit(X_train, y_train)
-y_pred = logreg.predict(X_test)
-confusion_matrix(y_test, y_pred)
-classification_report(y_test, y_pred)
-- estimators: Train-Test-Split/Instantiate/Fit/Predict paradigm applies to all classifiers and regressors
-用 sklearn 的步驟是一樣的
+- 
+
+
+
+
+- 
+- 
+
+- 
+
 - ROC 圖
 在 sklearn 中幾乎所有的 classifier 都有 .predict_proba()
 - from sklearn.metrics import roc_curve
