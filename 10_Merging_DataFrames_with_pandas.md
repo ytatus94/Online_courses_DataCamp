@@ -1,13 +1,23 @@
-10. Merging DataFrames with pandas
-有很多檔案要讀的話，可以把檔案寫成一個 list 然後用 for loop 讀取
+# 10. Merging DataFrames with pandas
+* 讀取很多檔案：
+  * 有很多檔案要讀的話，可以把檔案寫成一個 `list` 然後用 `for` loop 讀取
+  * 或是用 list comprehension 讀取
+  * 用通配符讀取
+```python
+# 用 for loop
 dfs = []
 for f in [f1, f2, f3]:
-  dfs.append(pd.read_csv(f))
-或是用 list comprehension 讀取
+    dfs.append(pd.read_csv(f))
+    
+# 用 list comprehension
 dfs = [pd.read_csv(f) for f in [f1, f2, f3]]
-用通配符：
+
+# 用通配符
 from glob import glob
 glob('sale*.csv')
+```
+
+* 
 拷貝 df DataFrame： df_new = df_old.copy()
 df.read_csv('檔案.csv', index_col='要當作 index 的欄位名字或 index') 如果 index 是時間格式的話可以加上 parse_dates=True 來使用 dateTime[64] 格式的 index
 df.sort_index() 如果要改變升降冪排序的話就要有 ascending=False
