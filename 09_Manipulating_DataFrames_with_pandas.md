@@ -1,23 +1,84 @@
-9. Manipulating DataFrames with pandas
+# 9. Manipulating DataFrames with pandas
 
-- df['欄位名']['列名'] 和 df.欄位名['列名'] 得到的結果是一樣的，df.loc['列名', '欄位名'] 和 df.iloc[列索引, 欄索引] 傳回可能是一個數值，一個 Series 或是一個 DataFrame，df[['欄位名1', '欄位名2']] 傳回的才是一個 DataFrame
+## Pandas 的基本操作
+* 切片操作
+```python
+# 取得 dataframe 的某個子集
+df[['欄位名1', '欄位名2']] # 要把欄位名用中括號括起來，傳回的才是一個 DataFrame
 
-- 各種選擇的方法：
-df.loc['A', 'B'] 選擇 A 列 B 欄的元素
-- df.loc['A':'B',:] 選擇 A 到 B 列，包括 B 列，全部的欄位的元素
-- df.loc[:, 'A':'B'] 選擇 A 到 B 欄，包括 B 欄，每一列的元素
-- df.loc['A':'B':-1] 有第三個元素 -1 表示將結果逆排序
-- df.loc[['A', 'B'], ['C', 'D']] 選擇 A 列和 B 列 和 C 欄和 D 欄，傳回的是一個 DataFrame
-- 用 list 和 列與欄位名的方式可以混和使用
-df.iloc[] 的方法相同，只是改成用數值索引
+# 取得 dataframe 的某個儲存格
+df['欄位名']['列名'] # 注意欄位名要放前面
+df.欄位名['列名'] # 注意欄位名要放前面
+# 上面兩種方式得到的結果是一樣的
 
-- 用 df.loc[‘A':'B', ['C', 'D']] 的話是包含 B 欄位的，但是 df.iloc[a:b, [c,d]] 就不包含 b
-- df[df 的條件判斷], df['欄位名'][df 的條件判斷] 多格條件判斷時每一個都用 () 括起來，用 & 和 |
-- 可以對條件判斷後選出的資料做運算
+# 取得 dataframe 的某部分
+df.loc['列名', '欄位名']
+df.iloc[列索引, 欄索引] # iloc 有 i 表示要用 index
+# 上面兩種方式得到的結果可能是一個數值，一個 Series 或是一個 DataFrame
+# df.loc[] 和 df.iloc[] 的使用方法相同，只是 iloc 是改成用數值索引
 
-- 可以用 df.欄位1[df.欄位2 的條件判斷] 依照欄位 2 判斷的結果選擇欄位 1 ，還可以將結果做運算，會直接反映在 df 上
-- 例如：df.eggs[df.salt > 55] += 5 和 election['winner'][too_close] = np.nan
-- df2 = df.copy() 拷貝 df DataFrame 到 df2
+# 選擇 A 列 B 欄的元素
+df.loc['A', 'B']
+# 選擇 A 列 B 欄的元素，但是用逆排序
+df.loc['A':'B':-1] # 有第三個元素 -1 表示將結果逆排序
+
+# 選擇 A 到 B 列，包括 B 列，全部的欄位的元素
+df.loc['A':'B', :]
+
+# 選擇 A 到 B 欄，包括 B 欄，每一列的元素
+df.loc[:, 'A':'B']
+
+# 選擇 A 列和 B 列 和 C 欄和 D 欄，傳回的是一個 DataFrame
+df.loc[['A', 'B'], ['C', 'D']] # 用 list 和 列與欄位名的方式可以混和使用
+
+# loc 和 iloc 的差異
+df.loc[‘A':'B', ['C', 'D']] # 結果是包含 B 欄位
+df.iloc[a:b, [c,d]] # 結果是不包含 b 欄位
+```
+
+* 條件判斷
+  * 當有多個條件判斷式的時後，每一個條件判斷式都用 () 括起來，用 & 和 | 來表示 and 和 or 的邏輯符號
+  * 可以對條件判斷後選出的資料做其他的運算
+```python
+df[df 的條件判斷]
+df['欄位名'][df 的條件判斷]
+
+# 依照欄位 2 判斷的結果選擇欄位 1
+df.欄位1[df.欄位2 的條件判斷]
+# 可以將結果做更進一步的運算，會直接反映在 df 上，例如：
+df.eggs[df.salt > 55] += 5 # 滿足鹽巴比 55 大時的部分，對雞蛋的原始數值加上 5
+election['winner'][too_close] = np.nan # 滿足 too_colse 的條件的部分，winner 的欄位都設成 np.nan
+```
+
+```
+# 拷貝 dataframe
+df2 = df.copy() # 拷貝 df DataFrame 到 df2
+```
+
+## Index
+  * Hierarchical index 就是有兩個或以上的 index，也叫做 Multi-level Index
+```python
+# 顯示 index (傳回 index 的值)
+df.index
+# 設定 index
+df.index = [index 的列表] # 可以將 index 改成列表中指定的值
+
+# 把 str 型態的 index 換成大寫字母
+df.index.str.upper()
+# 把 str 型態的 index 換成小寫字母
+df.index.map(str.lower) # index 欄位不可以用 apply()，要用 map()
+
+# 將 欄位1 指定為 index
+df.index = df['欄位1']
+# 上面的方式會造成欄位1重複，一個是原先的欄位另一個是用來當 index，可以使用 del df['欄位1'] 可以刪除原先的欄位1剩下 index
+```
+## Column
+```python
+# 對欄位命名或重新命名
+df.columns = ['欄位1', '欄位2']
+```
+
+- 
 - df.all() 選擇所有不含有 0 的欄位，只要該欄位有 0 就不要 (NaN 不是 0)
 - df.any() 選擇所有非 0 值的欄位，只要該欄位有非 0 就要
 - df.isnull().any() 選擇所有含有 NaN 的欄位
@@ -28,10 +89,10 @@ df.iloc[] 的方法相同，只是改成用數值索引
 - df.floordiv(n) 和 np.floor_divide(df, n) 一樣，對 df 內的所有元素做整數除法，除數是 n
 - df.apply(自訂函數或是 lambda 函數) 會對全部欄位的資料做 apply() 內運算
 - apply() 內放自訂函數名就好，不用加上自訂函數的參數
-- df.index 傳回 index 的值
-- df.index.str.upper()
-df.index.map(str.lower) index 欄位不可以用 apply()，要用 map()
-- df.columns = ['欄位1', '欄位2'] 可以對欄位命名或重新命名
+- 
+- 
+
+
 - .map() method is used to transform values according to a Python dictionary look-up.
 - 例如：
 red_vs_blue = {'Obama':'blue', 'Romney':'red'}
@@ -59,10 +120,10 @@ DataFrame: 2D array with Series as columns
 index1    value1   value2
 index2   value3  value4
 df.index.name 和 df.columns.name 若不加等號賦值就只是顯示結果
-- df.index 顯示 index
-- df.index = [index 的列表] 可以將 index 改成列表中指定的
-- df.index = df['欄位1'] 可以將 欄位1 指定為 index
-- 上面的方式會造成欄位1重複，一個是原先的欄位另一個是用來當 index，可以使用 del df['欄位1'] 可以刪除原先的欄位1剩下 index
+- 
+- 
+- 
+- 
 - df = pd.read_csv('file.csv', index_col='欄位1') 在讀入 csv 檔案時就指明用 欄位1 當 index，如果用 index_col=['欄位1', '欄位2', '欄位3'] 就換變成 multi-level row index
 - Hierarchical index 就是有兩個或以上的 index，也叫做 Multi-level Index
 用 df.info() 看型態的話 Hierarchical index 顯示的型態是 MultiIndex
