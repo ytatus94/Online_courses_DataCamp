@@ -34,7 +34,7 @@ c C
 * There is no unzip function for doing the reverse of what `zip()` does.
 * 星號 `*zip_obj`: **unpacks an iterable** such as a list or a tuple into positional arguments in a function call.
 * 範例:
-  * `z1 = zip(list_A, list_B)` 產生的 z1 是一個 zip 物件，是由一堆 tuple 所組成，由 list_A 和 list_B 的元素按照相同的 index 順序倆倆組成一對 tuples
+  * `z1 = zip(list_A, list_B)` 產生的 z1 是一個 zip 物件，是由一堆 tuple 所組成，由 list\_A 和 list\_B 的元素按照相同的 index 順序倆倆組成一對 tuples
   * `*z1` 是把 zip 物件解開成一堆 tuple
   * `result1, result2 = zip(*z1)` 這邊 `*z1` 先把 zip 物件，變成一堆 tuple，再把這些 tuple zip 起來，如此可還原 zip 前的列表
 
@@ -87,6 +87,7 @@ with open('world_dev_ind.csv') as file:
 ```
 
 * 用 `with` 開讀檔案的話，不用自己關掉檔案 `file.close()`
+  * 用 `with XXX as YYY` 的方法叫做 context manager 
   * 只用 `file = open(檔案, mode)` 來開讀檔時，才要自己關掉檔案 `file.close()`
 
 ## DataFrame

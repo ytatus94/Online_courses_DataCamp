@@ -13,21 +13,24 @@
   * `def func(*args)`: variable-length arguments (*args)
   * `def report_status(**kwargs)`: variable-length keyword arguments (**kwargs)
     * 這邊都說是 keyword 參數了，就是用 dict
-* map
+* map: 將 list 中的每個元素做 lambda function 的計算，傳回一個 map 物件。
+
 ```python
-map(lambda func, list) # 將 list 中的每個元素做 lambda function 的計算，傳回一個 map 物件。
+map(lambda func, list)
 list(map(lambda func, list)) # 把 map 物件轉成 list
 ```
 
-* filter
+* filter: 將 list 中的每個元素做 lambda function 的計算，傳回一個 filter 物件。
+
 ```python
-filter(lambda func, list) # 將 list 中的每個元素做 lambda function 的計算，傳回一個 filter 物件。
+filter(lambda func, list)
 list(filter(lambda func, list)) # 把 filter 物件轉成 list
 ```
 
-* reduce
+* reduce: reduce 函數是在 functools 模組裡面
+
 ```python
-from functools import reduce # reduce 函數是在 functools 模組裡面
+from functools import reduce
 reduce(lambda func, list)
 ```
 

@@ -53,12 +53,6 @@ plt.grid(True)
 plt.clf()
 ```
 
----
-
-* `dict.keys()` 列出字典內的所有 key
-* `A in dict` 去找看看 A 是否是 dict 的 key
-* `del(某東西)` 刪除某東西
-
 ## Pandas
 
 ```python
@@ -95,27 +89,7 @@ df[['欄位名1', '欄位名2']] # 存取兩個欄位，傳回 Pandas DataFrame
   * `df.iloc[:, [1, 2]]` 全部的列與第二第三欄的交集
 * 還有 `ix()`, `iat()`, `at()` 可以用
 
-## 迴圈
-* `for index, a in enumerate(列表):`
-  * `enumerate(列表)` 會把列表的值一個個取出，並加上 index 0, 1, 2, 3... 做成 tuple。
-  * index 也可以用 `enumerate(列表, start=n)` 來改成由 n 開始。
-* 各種迴圈的方式：
-
-  ```python
-  # 迴圈字典
-  for key, value in dict.items():
-  
-  # 迴圈 np_array
-  for x in np_array_1D:
-  
-  # 迴圈多維 Numpy array 要用 np.nditer()
-  for x in np.nditer(np_array_2D):
-  
-  # 迴圈 data_frame 要用 .iterrows()，其中 for loop 傳回的 row data 是 Pandas Series
-  for lab, row in pd_dataframe.iterrows():
-  ```
-  
----
+### 建立新的欄位
 
 * 建立新的欄位方法一：用迴圈
 
@@ -136,6 +110,26 @@ df[['欄位名1', '欄位名2']] # 存取兩個欄位，傳回 Pandas DataFrame
   ```
   country 欄位的值是字串，所以要用 `str.upper` 才能改大寫
 
+## 迴圈
+* `for index, a in enumerate(列表):`
+  * `enumerate(列表)` 會把列表的值一個個取出，並加上 index 0, 1, 2, 3... 做成 tuple。
+  * index 也可以用 `enumerate(列表, start=n)` 來改成由 n 開始。
+* 各種迴圈的方式：
+
+  ```python
+  # 迴圈字典
+  for key, value in dict.items():
+  
+  # 迴圈 np_array
+  for x in np_array_1D:
+  
+  # 迴圈多維 Numpy array 要用 np.nditer()
+  for x in np.nditer(np_array_2D):
+  
+  # 迴圈 data_frame 要用 .iterrows()，其中 for loop 傳回的 row data 是 Pandas Series
+  for lab, row in pd_dataframe.iterrows():
+  ```
+
 ## Numpy
 * Numpy array 的布林判斷：
 
@@ -145,16 +139,23 @@ np.logical_or(np_array1, np_array2)
 np.logical_not(np_array1, np_array2)
 ```
 
-也可以用 Pandas Series 取代 np_array
+也可以用 Pandas Series 取代 Numpy ndarray
 
 * Numpy random number:
 
 ```python
 np.random.seed(123) # 產生亂數種子
 np.random.rand() # 產生 0 到 1 之間的隨機數
-np.random.random(size=要產生幾個隨機數) # 傳回一個 Numpy array 元素個數是 size 所指定的數目
+np.random.random(size=要產生幾個隨機數) # 傳回一個 Numpy array，元素的個數是 size 所指定的數目
 np.random.randint(下限, 上限) # 產生下限到上限之間的隨機數，不包含上限
 np.random.randn() # 依照 Normal distribution 產生亂數
 ```
 
 * `np.transpose(np_array)` 轉置
+
+## 小技巧
+
+* `dict.keys()` 列出字典內的所有 key
+* `A in dict` 去找看看 A 是否是 dict 的 key
+* `del(某東西)` 刪除某東西
+

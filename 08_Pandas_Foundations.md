@@ -1,15 +1,49 @@
 # 8. pandas Foundations
 
+## 小技巧
+* exploratory data analysis (EDA)
+* NaN 表示 Not-a-Number
+* 用 Numpy 取 log，以 10 為底: `np_vals_log10 = np.log10(np_vals)`
+  *  也可以把 df 當參數直接傳給 numpy methods 例如：`df_log10 = np.log10(df)` 結果是一個 DataFrame
+* `eval(x)`: The eval() function evaluates the specified expression, if the expression is a legal Python statement, it will be executed.
+* 算平均值
+
+```python
+df.mean() # 算每個欄位的平均值
+df.mean(axis='columns') # 一個列有很多欄位，axis='columns' 就是用該列全部欄位來算此列的平均值
+```
+
+* 算 quantile: 
+  * quartile, quantile, percentile 的意思都類似，只是不同稱呼，下表列出互相對應的
+
+  	|quartile|quantily|percentile|
+  	|:---:|:---:|:---:|
+  	|0|0|0|
+  	|1|0.25|25|
+  	|2|0.5|50|
+  	|3|0.75|75|
+  	|4|1|100|
+   
+  * `df.quantile(q)`: q 可以是介於 0~1 的數值或是列表
+    *  Example：`df.quantile([0.05, 0.95])`, 表示算 5% 和 95% 的 quartile
+    *  `df.quantile(0.5)` 等同於 median
+* `us = df[df['origin'] == 'US']` 會選出 origin 欄位的值是 US 的所有列，放到新的 DataFrame
+
+
 ## Pandas Dataframe 的基本操作
 * pandas DataFrame 是一個 2D array 
   * 每一個欄位是 pandas Series，是一個 1D array
 * 建立 Dataframe
-  * data 是一個字典，keys 是欄位的名字 values 是欄位的值
-    * 可以用列表來產生字典：`zipped = list(zip(list_keys, list_values))` 然後 `data = dict(zipped)`
+
 ```python
 df = pd.DataFrame(data)
 ```
+
+  * data 是一個字典，keys 是欄位的名字 values 是欄位的值
+    * 可以用列表來產生字典：`zipped = list(zip(list_keys, list_values))` 然後 `data = dict(zipped)`
+
 * 讀 CSV 檔到 Dataframe
+
 ```python
 # 讀入 file.csv 成 DataFrame
 df = pd.read_csv('file.csv')
@@ -23,7 +57,9 @@ df = pd.read_csv('file.csv')
 # comment='#' 是說以 # 開頭的都當註解不要讀入
 # index_col='A 欄位' 用 A 欄位當成 row index 那一欄
 ```
+
 * 顯示 Dataframe 的相關資訊
+
 ```python
 # 顯示頭 n 列，預設 n=5
 df.head(n)
@@ -43,7 +79,9 @@ df.index
 # 顯示 columns 的名字 (型態是 index)
 df.columns
 ```
+
 * 為欄位或是列命名
+
 ```python
 # 命名列: 指定 row index
 df.index=[row index 的列表]
@@ -54,16 +92,19 @@ df.columns=[欄位名字的列表]
 # 命名欄位: 指定 row index 所在的那一個欄位的名字
 df.index.name = '列的 index 那一欄的名字'
 ```
+
 * `df.column_name.values` 或 `df['column_name'].values` 型態是 numpy.ndarray
 * `df.values` 和 `pd_series.values` 也是 numpy.ndarray 型態
-
 * 把 dataframe 存檔
+
 ```python
 # 寫入 csv 檔
 df.to_csv('file.csv', index=False) # index=False 是說不要把 index 那一個欄位寫入 csv，加上 sep='\t' 變成用 tab 分隔 (預設是用 , 分隔)
+
 # 寫入 Excel 檔
 df.to_excel('file.xlsx', index=False) 
 ```
+
 ## 畫圖
 * 畫圖可以用 Numpy array, pandas Series, 和 pandas DataFrame:
   * 用 Numpy darray 畫圖:
@@ -78,43 +119,49 @@ df.to_excel('file.xlsx', index=False)
     * `df.plot()`
     * 上面兩種方式會把全部的欄位畫在同張圖上 
     * `df.plot(subplots=True)` 把不同欄位畫在不同的 subplot 上，不需要自己切割子圖
+* 一些畫圖的指令
 
-* NaN 表示 Not-a-Number
-- np_vals_log10 = np.log10(np_vals)
-- 也可以把 df 當參數直接傳給 numpy methods 例如：df_log10 = np.log10(df) 結果是 DataFrame
-- eval(x)
--  
+```python
+# y 軸改成 log scale
+plt.yscale('log')
 
+# 對圖形做各種設定
+df['欄位'].plot(color='b', style='.-', legend=True) # 顏色用 b (藍色)，線用 .-，有 legend
 
-- 
-- 
-- 
-- plt.yscale('log') 改成 log scale
-- df['欄位'].plot(color='b', style='.-', legend=True) 可以對圖形做各種設定
-- plt.axis((xmin, xmax, ymin, ymax))
-plt.savefig('figure.png/jpg/pdf') 存圖檔
+# 設定軸的上下界線
+plt.axis((xmin, xmax, ymin, ymax))
 
+# 存圖檔，支援 png, jpg, pdf
+plt.savefig('figure.png/jpg/pdf')
 
-- exploratory data analysis (EDA)
-- df.plot(kind='hist', x='欄位名' y='欄位名'), df.plot.hist(), df.hist() 都是畫 histogram 但是畫出來的結果有點差別，scatter, box 等圖也類似用法
-- df.plot(kind='line/scatter/box/hist/area', x='欄位名', y='欄位名')
-- 不指定 kind 預設就是畫 line plot
-畫 scatter plot 時用 s=[點的大小] 來指定每個點的大小
-- subplots=True 可以分成兩個圖，可以在畫 box plot 時使用
-- 畫 hist 時 bins=數目 指定幾個 bin，range=(low, high) 指定範圍
-- 畫 hist 的 PDF 時要加上 normed=True 畫 CDF (cumulative density functions) 要加上 normed=True, cumulative=True
-- fig, axes = plt.subplots(nrows=2, ncols=1) 自己切割子圖
-- 有用 subplots() 時，要用 ax=axes[n] 來指明畫在哪一張 subplot 上
+# 畫 histogram
+# 這三種方式雖然都是畫 histogram，但是畫出來的結果有點差別，scatter, box 等圖也類似用法
+# 畫 hist 時 bins=數目可指定幾個 bin，range=(low, high) 指定範圍
+# 畫 hist 的 PDF 時要加上 normed=True 
+# 畫 CDF (cumulative density functions) 要加上 normed=True, cumulative=True
+df.plot(kind='hist', x='欄位名' y='欄位名')
+df.plot.hist()
+df.hist()
+
+# 用 kind 來指定畫出各種圖
+# 不指定 kind 預設就是畫 line plot
+# 畫 scatter plot 時用 s=[點的大小] 來指定每個點的大小
+# subplots=True 可以分成兩個圖，可以在畫 box plot 時使用
+df.plot(kind='line/scatter/box/hist/area', x='欄位名', y='欄位名')
+
+# 有子圖的情況
+# 有用 subplots() 時，要用 ax=axes[n] 來指明畫在哪一張 subplot 上
+fig, axes = plt.subplots(nrows=2, ncols=1) # 自己切割子圖
+
+# 畫 hist ，因為 normed=True 會畫 PDF，ax=axes[0] 指明畫在第一列，有 30 個 bins，範圍是 0~3
 df.fraction.plot(ax=axes[0], kind='hist', normed=True, bins=30, range=(0,.3))
-- 畫 PDF，ax=axes[0] 指明畫在第一列
-- df.fraction.plot(ax=axes[1], kind='hist', normed=True, cumulative=True, bins=30, range=(0,.3)) 畫 CDF，ax=axes[1] 指明畫在第二列
-- df.mean() 算每個欄位的平均值
-- df.mean(axis='columns') 一個列有很多欄位，axis='columns' 就是用該列全部欄位來算此列的平均值
-- df.quantile(q) q 可以是介於0~1的數值或是列表
-- 例如：df.quantile([0.05, 0.95]), 而 df.quantile(0.5) 等同於 median
-- us = df[df['origin'] == 'US'] 會選出 origin 欄位的值是 US 的所有列，放到新的 DataFrame
-- titanic.loc[titanic['pclass'] == 1].plot(ax=axes[0], y='fare', kind='box')
 
+# 畫 hist，因為 normed=True, cumulate=True 所以是畫 CDF，ax=axes[1] 指明畫在第二列，有 30 個 bins，範圍是 0~3
+df.fraction.plot(ax=axes[1], kind='hist', normed=True, cumulative=True, bins=30, range=(0,.3))
+
+# 選出 pclass=1 的所有列，用 fare 欄位畫 box 圖，ax=axes[0] 指明畫在第一列
+titanic.loc[titanic['pclass'] == 1].plot(ax=axes[0], y='fare', kind='box')
+```
 
 ## 日期時間
 * 日期時間格式 `yyyy-mm-dd hh:mm:ss`
