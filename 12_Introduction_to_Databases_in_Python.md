@@ -1,39 +1,84 @@
-12. Introduction to Databases in Python
+# 12. Introduction to Databases in Python
 
-- 讀取 SQL
+## 使用 SQL 的方式來讀取 SQL
+* 建立 SQL engine 
+  * 這種方式可以適用於各種支持的 SQL 不一定只是 sqlite 而已
+
+```python
 from sqlalchemy import create_engine
-engine = create_engine('sqlite:///檔案.sqlite') 建立介面，連結到 'driver:///檔案'
-- 這種方式可以適用於各種支持的 SQL 不一定只是 sqlite 而已
-例如：engine = create_engine('postgresql+psycopg2://student:datacamp@postgresql.csrrinzqubik.us-east-1.rds.amazonaws.com:5432/census') 這是使用 PostgreSQL
-- 例如：engine = create_engine('mysql+pymysql://student:datacamp@courses.csrrinzqubik.us-east-1.rds.amazonaws.com:3306/census') 這是使用 MySQL
-- engine.table_names() 可以知道 SQL 檔案中所有的表格名字
-- connection = engine.connect() 和 SQL 檔案連接起來
-- stmt = 'SQL 指令'
-result_proxy = connection.execute(stmt) 這邊才是真正執行 SQL 指令
-- results = result_proxy.fetchall()
-之後就可以使用 results 的結果
-例如：first_row = results[0] 只取第一列
-first_row.keys() 顯示所有欄位名字，因為第一列就是欄位的名字
-first_row.欄位 得到第一列的某欄位的值
+engine = create_engine('sqlite:///檔案.sqlite') # 建立介面，連結到 'driver:///檔案'，這裡的 driver 是用 sqlit 當範例
+engine.table_names() # 可以知道 SQL 檔案中所有的表格名字
+connection = engine.connect() # 和 SQL 檔案連接起來
+stmt = 'SQL 指令'
+result_proxy = connection.execute(stmt) # 這邊才是真正執行 SQL 指令
+results = result_proxy.fetchall() # 得到 SQL 的結果之後就可以使用 results 中的結果
 
-- 使用 reflection 可以自動讀取表格，並且依照表格資訊建立 metadata
+first_row = results[0] # 只取第一列
+first_row.keys() # 顯示所有欄位名字，因為第一列就是欄位的名字
+first_row.欄位 # 得到第一列的某欄位的值
+```
+
+* 範例 1: 使用 PostgreSQL
+
+```python
+engine = create_engine('postgresql+psycopg2://student:datacamp@postgresql.csrrinzqubik.us-east-1.rds.amazonaws.com:5432/census')
+```
+* 範例 2: 使用 MySQL
+
+```python
+engine = create_engine('mysql+pymysql://student:datacamp@courses.csrrinzqubik.us-east-1.rds.amazonaws.com:3306/census')
+```
+
+* 使用 reflection 可以自動讀取表格，並且依照表格資訊建立 metadata
+
+```python
 from sqlalchemy import MetaData, Table
-- metadata = MetaData() 依照讀取的資料自動建立 metadata
-- 表格 = Table('表格名字', metadata, autoload=True, autoload_with=engine) 通常表格和表格名字是用一樣的
-- # Print table metadata
+metadata = MetaData() # 依照讀取的資料自動建立 metadata
+表格 = Table('表格名字', metadata, autoload=True, autoload_with=engine) # 通常 "表格" 和表格名字是用一樣的
+# Print table metadata
 print(repr(表格)) 顯示表格欄位名字與型態
-- # Print the column names
-print(表格.columns.keys()) 顯示表格欄位名字
-- # Print full table metadata
-print(repr(metadata.tables['census'])) 其實結果和 print(repr(表格)) 一樣
+# Print the column names
+print(表格.columns.keys()) # 顯示表格欄位名字
+# Print full table metadata
+print(repr(metadata.tables['census'])) # 其實結果和 print(repr(表格)) 一樣
+```
 
-- 用 pythonic 的方法來讀取 SQL
+## 使用 Pythonic 的方式來讀取 SQL
+
+```python
 from sqlalchemy import select
+
 SELECT 敘述：
 stmt = select([表格名字]) 選擇表格中的所有欄位，或是使用 stmt = select([表格.columns.欄位1, 表格.columns.欄位2, ...]) 選擇特定的欄位
-- WHERE 條件判斷：
+
+HERE 條件判斷：
 stmt = stmt.where(表格.columns.欄位 ==,<=,>=,!=之類的條件判斷)
 也可以用 in_(), like(), between()
+
+
+```
+
+
+##
+
+
+
+
+
+- 
+
+- 
+- 
+- 
+
+- 
+
+- 
+
+
+- 
+
+- W
 - 例如：stmt = stmt.where(census.columns.state.in_(states))
 - 如果需要用到 and, or, not 時
 from sqlalchemy import and_, or_, not_
@@ -68,6 +113,8 @@ total_pop2000 = cast(func.sum(census.columns.pop2000), Float)
 stmt = select([female_pop2000 / total_pop2000* 100])
 # Execute the query and store the scalar result: percent_female
 percent_female = connection.execute(stmt).scalar()
+
+
 JOIN 兩個表格：
 stmt = stmt.select_from(表格1.join(表格2, 依照表格一的哪個欄位 == 依照表格二的哪個欄位))
 若是兩個表格有相同欄位，又用此欄位 JOIN 那第二個參數可以省略

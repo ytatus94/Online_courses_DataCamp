@@ -2,14 +2,14 @@
 
 ## Pandas 的基本操作
 * 切片操作
+
 ```python
 # 取得 dataframe 的某個子集
 df[['欄位名1', '欄位名2']] # 要把欄位名用中括號括起來，傳回的才是一個 DataFrame
 
-# 取得 dataframe 的某個儲存格
+# 取得 dataframe 的某個儲存格，下面的兩種方式得到的結果是一樣的
 df['欄位名']['列名'] # 注意欄位名要放前面
 df.欄位名['列名'] # 注意欄位名要放前面
-# 上面兩種方式得到的結果是一樣的
 
 # 取得 dataframe 的某部分
 df.loc['列名', '欄位名']
@@ -29,7 +29,7 @@ df.loc['A':'B', :]
 df.loc[:, 'A':'B']
 
 # 選擇 A 列和 B 列 和 C 欄和 D 欄，傳回的是一個 DataFrame
-df.loc[['A', 'B'], ['C', 'D']] # 用 list 和 列與欄位名的方式可以混和使用
+df.loc[['A', 'B'], ['C', 'D']] # 用 list 和 列與欄位名 的方式可以混和使用
 
 # loc 和 iloc 的差異
 df.loc[‘A':'B', ['C', 'D']] # 結果是包含 B 欄位
@@ -37,26 +37,26 @@ df.iloc[a:b, [c,d]] # 結果是不包含 b 欄位
 ```
 
 * 條件判斷
-  * 當有多個條件判斷式的時後，每一個條件判斷式都用 () 括起來，用 & 和 | 來表示 and 和 or 的邏輯符號
+  * 當有多個條件判斷式的時後，每一個條件判斷式都用 `()` 括起來，用 `&` 和 `|` 來表示 and 和 or 的邏輯符號
   * 可以對條件判斷後選出的資料做其他的運算
+
 ```python
 df[df 的條件判斷]
 df['欄位名'][df 的條件判斷]
 
 # 依照欄位 2 判斷的結果選擇欄位 1
 df.欄位1[df.欄位2 的條件判斷]
-# 可以將結果做更進一步的運算，會直接反映在 df 上，例如：
+
+# 可以將結果做更進一步的運算，會直接反映在 df 上，例如:
 df.eggs[df.salt > 55] += 5 # 滿足鹽巴比 55 大時的部分，對雞蛋的原始數值加上 5
-election['winner'][too_close] = np.nan # 滿足 too_colse 的條件的部分，winner 的欄位都設成 np.nan
+df_election['winner'][too_close] = np.nan # 滿足 too_colse 的條件的部分，winner 的欄位都設成 np.nan
 ```
 
-```
-# 拷貝 dataframe
-df2 = df.copy() # 拷貝 df DataFrame 到 df2
-```
+* 拷貝: `df2 = df.copy()` 把  df DataFrame 拷貝到 df2
+
 
 ## Index
-  * Hierarchical index 就是有兩個或以上的 index，也叫做 Multi-level Index
+* Hierarchical index 就是有兩個或以上的 index，也叫做 Multi-level Index
 ```python
 # 顯示 index (傳回 index 的值)
 df.index

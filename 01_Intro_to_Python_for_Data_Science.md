@@ -91,3 +91,4 @@ np.round(數值, 四捨五入到第幾位) # 四捨五入
 * `from math import pi`
 * `from math import radians`
 * `type(物件)` 查物件的型態
+# 

@@ -5,11 +5,11 @@
 * NaN 表示 Not-a-Number
 * 用 Numpy 取 log，以 10 為底: `np_vals_log10 = np.log10(np_vals)`
   *  也可以把 df 當參數直接傳給 numpy methods 例如：`df_log10 = np.log10(df)` 結果是一個 DataFrame
-* `eval(x)`: The eval() function evaluates the specified expression, if the expression is a legal Python statement, it will be executed.
+* `eval(x)`: The `eval()` function evaluates the specified expression, if the expression is a legal Python statement, it will be executed.
 
 ## Pandas Dataframe 的基本操作
 * pandas DataFrame 是一個 2D array 
-  * 每一個欄位是 pandas Series，是一個 1D array
+  * 每一個欄位是 `pandas Series`，是一個 1D array
 * 建立 Dataframe
   * data 是一個字典，keys 是欄位的名字 values 是欄位的值
   * 可以用列表來產生字典
@@ -69,8 +69,8 @@ df.columns=[欄位名字的列表]
 df.index.name = '列的 index 那一欄的名字'
 ```
 
-* `df.column_name.values` 或 `df['column_name'].values` 型態是 numpy.ndarray
-* `df.values` 和 `pd_series.values` 也是 numpy.ndarray 型態
+* `df.column_name.values` 或 `df['column_name'].values` 型態是 `numpy.ndarray`
+* `df.values` 和 `pd_series.values` 也是 `numpy.ndarray` 型態
 * 把 dataframe 存檔
 
 ```python
@@ -104,7 +104,7 @@ df.mean(axis='columns') # 計算每個列的平均值
   * `df.quantile(q)`: q 可以是介於 0~1 的數值或是列表
     *  Example：`df.quantile([0.05, 0.95])`, 表示算 5% 和 95% 的 quartile
     *  `df.quantile(0.5)` 等同於 median
-* `df_new = df[df[欄位名] == 數值]` 會選出"欄位名"的值是"數值"的所有列，放到新的 DataFrame
+* `df_new = df[df["欄位名"] == 數值]` 會選出 `"欄位名"` 的值是 `數值` 的所有列，放到新的 DataFrame
 * the concept of 'method chaining': `df.method1().method2().method3()`
 * 對 str 型態的欄位做操作
 
