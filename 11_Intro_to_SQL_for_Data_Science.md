@@ -2,6 +2,8 @@
 
 * SQL 的關鍵字是不分大小寫的
 * SQL 命令結尾要加上**分號**
+* 用 `SELECT *` 表示顯示所有欄位
+* 用 `DISTINCT 欄位` 來只顯示該欄位的 unique values 
 * 不等於是用 `<>` 不是用 `!=` (某些客戶端可以用 !=，最好還是用 <>)
 * `BETWEEN` 是 inclusive
 * `IS NULL` 和 `IS NOT NULL` 可判斷是否是空值
@@ -23,4 +25,25 @@ GROUP BY 欄位1
 HAVING AVG(欄位3)條件
 ORDER BY 欄位2
 LIMIT 數目
+```
+
+## Examples
+```sql
+-- 從表格中選擇欄位
+SELECT title FROM films;
+SELECT release_year FROM films;
+SELECT name FROM people;
+SELECT title FROM films;
+SELECT title, release_year FROM films;
+SELECT title, release_year, country FROM films;
+SELECT * FROM films;
+
+-- 用 DISTINCT 顯示欄位中的 unique values
+SELECT DISTINCT country FROM films;
+SELECT DISTINCT certification FROM films;
+SELECT DISTINCT role FROM roles;
+
+-- 用 COUNT(*) 計算表格有多少 
+SELECT COUNT(*) FROM reviews;
+
 ```
