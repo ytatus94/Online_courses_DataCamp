@@ -1,12 +1,12 @@
 # Intermediate SQL Queries
 
-## Example 1. Selecting columns
-
 * 包含了四個表格 films, people, review, roles, 每個表格的欄位如下
   * `films` table: `id`, `title`, `release_year`, `country`, `duration`, `language`, `certification`, `gross`, `budget`
   * `people` table: `id`, `name`, `birthdate`, `deathdate`
   * `review` table: `id`, `film_id`, `num_user`, `num_critic`, `imdb_score`, `num_votes`, `facebook_likes`
   * `roles` table: `id`, `film_id`, `person_id`, `role`
+
+## Example 1. Selecting columns
 
 ```SQL
 SELECT name FROM people;
