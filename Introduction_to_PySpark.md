@@ -44,9 +44,8 @@ spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 
 * `Spark_DF = spark.createDataFrame(pandas_df)` 把 Pandas DataFrame 轉成 Spark DataFrame
   * 但是轉完之後 SparkSession 並**不能**存取，要先把轉完後的 DataFrame 註冊到 SparkSession 之後才能用 (catalog 中要有，才可以用)
-  * 註冊的方式是  `Spark_DF.createOrReplaceTempView("表格的名字")` 或是用 `Spark_DF..createTempView("表格的名字")`
-用 `Spark_DF.createTempView("表格的名字")` 也可以
-差別在於前者在表格不存在時，會建立 temporary table，若表格已經存在了，就只是更新表格
+  * 註冊的方式是  `Spark_DF.createOrReplaceTempView("表格的名字")`
+    * 用 `Spark_DF.createTempView("表格的名字")` 也可以，但是差別在於前者在表格不存在時，會建立 temporary table，若表格已經存在了，就只是更新表格
 * `spark.read.csv(file_path, header=True)` 是從檔案中讀入 Spark DataFrame
   * `header=True` 表示用 csv 中的第一列當 column names
 * 在 Spark 中要做 column-wise 的操作時是使用 `spark_DF.withColumn('新欄位的名字', 新欄位的值)` 方法，新的欄位必須是 Column 類別的物件
