@@ -51,8 +51,10 @@ spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 * 在 Spark 中要做 column-wise 的操作時是使用 `spark_DF.withColumn('新欄位的名字', 新欄位的值)` 方法，新的欄位必須是 Column 類別的物件
   * `spark_DF.colName` 可以產生 Column 類別的物件
   * `df = spark_DF.withColumn("newCol", spark_DF.oldCol 運算)`
-* `Spark.table('表格的名字')` 其中表格必須是要用 `spark.catalog.listTables()` 查詢時能看到的
+* `Spark.table('表格的名字')` 會用表格來產生 Spark DataFrame ，其中表格必須是要用 `spark.catalog.listTables()` 查詢時能看到的
 * Spark DataFrame 是**不可變的 immutable**，所有對 DataFrame 做的動作都是傳回一個新的 DataFrame
+  * 把原先的 DataFrame 覆寫掉 `df = df.withColumn("newCol", df.oldCol 做某運算)`
+  * 把原先的 column 覆寫掉 `df = df.withColumn("oldCol", df.oldCol 做某運算)`
 * `spark_DF.fliter(condition)`
   * 相當於 SQL 中的 `WHERE`，是用來篩選符合條件的資料
   * condition 可以是經 spark 操作後的**布林判斷**，也可以是 SQL 的 **WHERE 子句的字串**
