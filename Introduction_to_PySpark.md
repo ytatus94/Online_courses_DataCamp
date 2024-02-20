@@ -3,7 +3,7 @@
 ## 結構
 
 * Spark 把資料切開到不同的 nodes 上，每個 node 只有一部分的資料，所以**可以做平行計算**
-  * Cluster 包含了一個 master node 和剩下的 slaves nodes
+  * Cluster 包含了一個 master node 和剩下的 slaves nodes (workers)
   * master manages splitting up the data and the computations.
   * slaves 實際執行運算，運算完後把結果傳回給 master
 * Spark 的資料結構是 **Resilient Distributed Dataset (RDD)**
@@ -19,8 +19,18 @@
   * 用 `sc.version` 查看 Spark 版本
   * 可以在類別的建構子的參數中指定 cluster 屬性，`SparkConf()` 建構子可以建立一個物件保存這些屬性
 * 同時建立許多 SparkSessions 和 SparkContexts 會造成問題，所以用 `SparkSession.builder.getOrCreate()` 傳回目前的 SparkSession ，若是不存在時就建立一個新的
+```python
+# Import SparkSession from pyspark.sql
+from pyspark.sql import SparkSession
+# Create my_spark
+my_spark = SparkSession.builder.getOrCreate()
+```
 * SparkSession
   * `catalog` 屬性列出 cluster 中的所有 data，這個 `catalog` 屬性有許多方法可以呼叫，例如：`spark.catalog.listTables()` 傳回 cluster 中所有表格的名字
+```python
+# Print the tables in the catalog
+print(spark.catalog.listTables())
+```
 
 ## Spark 的基本操作
 * 可以用 SQL queries 來查詢表格
@@ -32,9 +42,9 @@ spark.sql(query).show() # 顯示查詢結果
 spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 ```
 
-* `Spark_DF = spark.createDataFrame(pd_temp)` 把 Pandas DataFrame 轉成 Spark DataFrame
-  * 但是轉完之後 SparkSession 並**不能**存取，要先把轉完後的 DataFrame 註冊到 SparkSession 之後才能用
-  * 註冊的方式是  `Spark_DF.createOrReplaceTempView("表格的名字")`
+* `Spark_DF = spark.createDataFrame(pandas_df)` 把 Pandas DataFrame 轉成 Spark DataFrame
+  * 但是轉完之後 SparkSession 並**不能**存取，要先把轉完後的 DataFrame 註冊到 SparkSession 之後才能用 (catalog 中要有，才可以用)
+  * 註冊的方式是  `Spark_DF.createOrReplaceTempView("表格的名字")` 或是用 `Spark_DF..createTempView("表格的名字")`
 用 `Spark_DF.createTempView("表格的名字")` 也可以
 差別在於前者在表格不存在時，會建立 temporary table，若表格已經存在了，就只是更新表格
 * `spark.read.csv(file_path, header=True)` 是從檔案中讀入 Spark DataFrame
