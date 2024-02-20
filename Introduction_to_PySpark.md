@@ -19,14 +19,17 @@
   * 用 `sc.version` 查看 Spark 版本
   * 可以在類別的建構子的參數中指定 cluster 屬性，`SparkConf()` 建構子可以建立一個物件保存這些屬性
 * 同時建立許多 SparkSessions 和 SparkContexts 會造成問題，所以用 `SparkSession.builder.getOrCreate()` 傳回目前的 SparkSession ，若是不存在時就建立一個新的
+
 ```python
 # Import SparkSession from pyspark.sql
 from pyspark.sql import SparkSession
 # Create my_spark
 my_spark = SparkSession.builder.getOrCreate()
 ```
+
 * SparkSession
   * `catalog` 屬性列出 cluster 中的所有 data，這個 `catalog` 屬性有許多方法可以呼叫，例如：`spark.catalog.listTables()` 傳回 cluster 中所有表格的名字
+
 ```python
 # Print the tables in the catalog
 print(spark.catalog.listTables())
@@ -63,6 +66,11 @@ spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 ```python
 flights.filter(flights.air_time > 120).show() # 是用布林判斷
 flights.filter("air_time > 120").show() # 是用 WHERE 子句的字串
+
+# Filter flights with a SQL string
+long_flights1 = flights.filter("distance > 1000")
+# Filter flights with a boolean column
+long_flights2 = flights.filter(flights.distance > 1000)
 ```
 
 * `spark_DF.select('欄位名字')`
