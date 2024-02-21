@@ -76,15 +76,15 @@ long_flights2 = flights.filter(flights.distance > 1000)
 * `spark_DF.select('欄位名字')`
   * 相當於 SQL 中的 `SELECT`
   * 參數可以用**欄位的名字的字串**或是用 **spark Column 類別的物件**
-    ```python
-    spark_DF.select('col_name1', 'col_name2', 'col_name3') # 用欄位的名字
-    spark_DF.select(spark_DF.col1, spark_DF.col2, spark_DF.col3) # 用 spark Column 類別的物件
-    ``` 
     * 如果用的是 spark Column 類別的物件，那可以對 column 做運算
     * 如果參數用的是欄位的名字的字串，是無法對欄位做運算的，要改用 `spark_DF.selectExpr('SQL 命令的字串')` 才可以用 SQL 的方式對欄位做運算
     * 例如:
 
 ```python
+spark_DF.select('col_name1', 'col_name2', 'col_name3') # 用欄位的名字
+spark_DF.select(spark_DF.col1, spark_DF.col2, spark_DF.col3) # 用 spark Column 類別的物件
+
+# examples:
 flights.select(flights.air_time/60) # 用 select() 又要對欄位做運算，那只能用 spark 的 Column 物件
 flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位做運算，就要改用 selectExpr()
 ```
@@ -95,9 +95,9 @@ flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位�
 
 * `spark_column_obj.alias()`
   * 相當於 SQL 裡的 `AS`
-  * 例如: `flights.select((flights.air_time/60).alias("duration_hrs"))`
+  * 例如: `flights.select((flights.air_time/60).alias("duration_hrs"))` , 這等價於 `flights.selectExpr("air_time/60 as duration_hrs")`
 * `spark_DF.groupBy()` 會產生 GroupedData 物件
-  * 如果有參數時，就相當於 SQL 的 `GROUP BY`
+  * 如果呼叫 groupBy() 沒有參數, 會產生一個 grouped DataFrame. 如果有參數時，就相當於 SQL 的 `GROUP BY`
   * Aggregation function (像是 `.max()`, `.min()`, `.count()`, `.avg()` 等等) 是 GroupedData 物件的方法
   * 例如: `spark_DF.groupBy().min("col").show()` 注意 Aggregation function 中放的是欄位的名字的字串
   * 如果用 `spark_DF.groupBy().agg( F.函數(欄位名字) )` 的話，就可以使用定義在 `pyspark.sql.functions` 的 Aggregation function，像是 `F.stddev()` 只是記得要先 `import pyspark.sql.functions as F`
