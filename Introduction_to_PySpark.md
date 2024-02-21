@@ -76,6 +76,10 @@ long_flights2 = flights.filter(flights.distance > 1000)
 * `spark_DF.select('欄位名字')`
   * 相當於 SQL 中的 `SELECT`
   * 參數可以用**欄位的名字的字串**或是用 **spark Column 類別的物件**
+    ```python
+    spark_DF.select('col_name1', 'col_name2', 'col_name3') # 用欄位的名字
+    spark_DF.select(spark_DF.col1, spark_DF.col2, spark_DF.col3) # 用 spark Column 類別的物件
+    ``` 
     * 如果用的是 spark Column 類別的物件，那可以對 column 做運算
     * 如果參數用的是欄位的名字的字串，是無法對欄位做運算的，要改用 `spark_DF.selectExpr('SQL 命令的字串')` 才可以用 SQL 的方式對欄位做運算
     * 例如:
