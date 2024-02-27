@@ -51,17 +51,17 @@ spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 
 * `Spark_DF = spark.createDataFrame(pandas_df)` 把 Pandas DataFrame 轉成 Spark DataFrame
   * 但是轉完之後 SparkSession 並**不能**存取，要先把轉完後的 DataFrame 註冊到 SparkSession 之後才能用 (catalog 中要有，才可以用)
-  * 註冊的方式是  `Spark_DF.createOrReplaceTempView("表格的名字")`
-    * 用 `Spark_DF.createTempView("表格的名字")` 也可以，但是差別在於前者在表格不存在時，會建立 temporary table，若表格已經存在了，就只是更新表格
+  * 註冊的方式是 `Spark_DF.createTempView("表格的名字")` 或 `Spark_DF.createOrReplaceTempView("表格的名字")`
+    * 差別在於當表格不存在時，`createOrReplaceTempView()` 會建立 temporary table，若表格已經存在了，就只是更新表格
 * `spark.read.csv(file_path, header=True)` 是從檔案中讀入 Spark DataFrame
   * `header=True` 表示用 csv 中的第一列當 column names
 * 在 Spark 中要做 column-wise 的操作時是使用 `spark_DF.withColumn('新欄位的名字', 新欄位的值)` 方法，新的欄位必須是 Column 類別的物件
   * `spark_DF.colName` 可以產生 Column 類別的物件
-  * `df = spark_DF.withColumn("newCol", spark_DF.oldCol 運算)`
+  * `spark_DF = spark_DF.withColumn("newCol", spark_DF.oldCol 運算)`
 * `Spark.table('表格的名字')` 會用表格來產生 Spark DataFrame ，其中表格必須是要用 `spark.catalog.listTables()` 查詢時能看到的
 * Spark DataFrame 是**不可變的 immutable**，所有對 DataFrame 做的動作都是傳回一個新的 DataFrame
-  * 把原先的 DataFrame 覆寫掉 `df = df.withColumn("newCol", df.oldCol 做某運算)`
-  * 把原先的 column 覆寫掉 `df = df.withColumn("oldCol", df.oldCol 做某運算)`
+  * 把原先的 DataFrame 覆寫掉 `spark_DF = spark_DF.withColumn("newCol", df.oldCol 做某運算)`
+  * 把原先的 column 覆寫掉 `spark_DF = spark_DF.withColumn("oldCol", df.oldCol 做某運算)`
 * `spark_DF.fliter(condition)`
   * 相當於 SQL 中的 `WHERE`，是用來篩選符合條件的資料
   * condition 可以是經 spark 操作後的**布林判斷**，也可以是 SQL 的 **WHERE 子句的字串**
@@ -69,12 +69,10 @@ spark.sql(query).toPandas() # 把查詢結果轉換成 Pandas DataFrame
 
 ```python
 flights.filter(flights.air_time > 120).show() # 是用布林判斷
-flights.filter("air_time > 120").show() # 是用 WHERE 子句的字串
+flights.filter("air_time > 120").show() # 是用 SQL 的 WHERE 子句的字串
 
-# Filter flights with a SQL string
-long_flights1 = flights.filter("distance > 1000")
-# Filter flights with a boolean column
-long_flights2 = flights.filter(flights.distance > 1000)
+long_flights1 = flights.filter("distance > 1000") # Filter flights with a SQL string
+long_flights2 = flights.filter(flights.distance > 1000) # Filter flights with a boolean column
 ```
 
 * `spark_DF.select('欄位名字')`
@@ -88,7 +86,6 @@ long_flights2 = flights.filter(flights.distance > 1000)
 spark_DF.select('col_name1', 'col_name2', 'col_name3') # 用欄位的名字
 spark_DF.select(spark_DF.col1, spark_DF.col2, spark_DF.col3) # 用 spark Column 類別的物件
 
-# examples:
 flights.select(flights.air_time/60) # 用 select() 又要對欄位做運算，那只能用 spark 的 Column 物件
 flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位做運算，就要改用 selectExpr()
 ```
@@ -108,7 +105,7 @@ flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位�
 * `spark_DF1.join(spark_DF2, on='欄位名字', how='leftouter')`
   * 依照指定的欄位來結合兩個表格
 
-* 在 `payspark.ml` 中最重要的兩個模組是 Transformer 和 Estimator
+* 在 `pyspark.ml` 中最重要的兩個模組是 Transformer 和 Estimator
   * `Transformer.transform()` 把輸入的 DataFrame 變成另一個新的 DataFrame
   * `Estimator.fit()` 也是輸入 DataFrame 但是傳回 model 物件
 
