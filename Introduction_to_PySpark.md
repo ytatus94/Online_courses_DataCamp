@@ -114,8 +114,8 @@ flights.selectExpr("air_time/60 as duration_hrs") # 要用 SQL 命令對欄位�
 ## Spark Machine Learning
 
 * 用 spark 做 ML 的話，只能處理**數值的資料**
-  * 所以要先用 `spark_DF = spark_DF.withColumn("欄位", spark_DF.欄位.cast("型態"))` 來對欄位做型態轉換
-* categorical feature 要先建立 `StringIndexer` 然後再建立 `OneHotEncoder` 變成數值的才能用 spark 做 ML
+  * 所以要先用 `spark_DF = spark_DF.withColumn("欄位", spark_DF.欄位.cast("型態"))` 來對非數值的欄位做型態轉換
+  * Categorical feature 要先建立 `StringIndexer` 然後再建立 `OneHotEncoder` 變成數值的才能用 spark 做 ML
 
 ```python
 pyspark.ml.feature
@@ -123,14 +123,14 @@ pyspark.ml.feature
 欄位名字_encoder = OneHotEncoder(inputCol="欄位名字_index", outputCol="欄位名字_fact")
 ```
 
-* Spark 需要把所有的 feature 的欄位變成**單一的一個欄位**，然後才能做 model
+* Spark 需要把所有的 feature 的欄位變成**單一的一個欄位**，然後才能建立 model
   * 其實就是把每一個 row 的全部欄位用 `VectorAssembler` 變成一個大大的 vector
 
 ```python
 vec_assembler = VectorAssembler(inputCols=[欄位列表], outputCol="features")
 ```
 
-* 要把的動作加到 Pipeline 裡面
+* 要把全部的動作加到 Pipeline 裡面
 
 ```python
 # Import Pipeline
@@ -159,6 +159,13 @@ lr = LogisticRegression()
 * k-fold cross validation: 把 training data 分成 k 等分 (payspark 預設是分 3 份)，其中 k-1 份拿來做訓練，訓練完後拿剩下的那一份求誤差。這個動作對每一份 data 都做一次，會得到 k 個誤差值，cross validation error 就是這 k 個誤差值的平均
 
 * 建立 evaluator
+  * 要依照 model 選擇不同的 evaluator
+    * 例如 binary classification model 就選擇 BinaryClassificationEvaluator
+  * 要指定依照哪一種 metric 來評估模型好壞
+    * 例如 binary classification algorithm 常常用 AUC (area under the curve) 來判斷模型好壞
+      * AUC 把 binary classifier 常見的兩種 errors (false positives and false negatives) 結合起來, 變成一個數
+      * AUC 越接近 1 的話，模型越好
+      * AUC 的 curve 指的是 ROC (receiver operating curve)
 
 ```python
 # Import the evaluation submodule
@@ -405,4 +412,53 @@ piped_data = flights_pipe.fit(model_data).transform(model_data)
 
 # Split the data into training and test sets
 training, test = piped_data.randomSplit([.6, .4])
+
+# Import LogisticRegression
+from pyspark.ml.classification import LogisticRegression
+
+# Create a LogisticRegression Estimator
+lr = LogisticRegression()
+
+# Import the evaluation submodule
+import pyspark.ml.evaluation as evals
+
+# Create a BinaryClassificationEvaluator
+evaluator = evals.BinaryClassificationEvaluator(metricName="areaUnderROC")
+
+# Import the tuning submodule
+import pyspark.ml.tuning as tune
+
+# Create the parameter grid
+grid = tune.ParamGridBuilder()
+
+# Add the hyperparameter
+grid = grid.addGrid(lr.regParam, np.arange(0, .1, .01))
+grid = grid.addGrid(lr.elasticNetParam, [0, 1])
+
+# Build the grid
+grid = grid.build()
+
+# Create the CrossValidator
+cv = tune.CrossValidator(estimator=lr,
+               estimatorParamMaps=grid,
+               evaluator=evaluator
+               )
+
+# Fit cross validation models
+models = cv.fit(training)
+
+# Extract the best model
+best_lr = models.bestModel
+
+# Call lr.fit()
+best_lr = lr.fit(training)
+
+# Print best_lr
+print(best_lr)
+
+# Use the model to predict the test set
+test_results = best_lr.transform(test)
+
+# Evaluate the predictions
+print(evaluator.evaluate(test_results))
 ```
